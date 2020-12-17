@@ -30,7 +30,6 @@ be an iterable consisting of strings, and the strings property will
 return a normal python list of string objects, used in this way you
 hardly need to notice that the StringList class is at play.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 from six import string_types
 from ecl import EclPrototype
 from cwrap import BaseCClass

@@ -39,13 +39,9 @@ DoubleVector or BoolVector should be used.
 The C-level has implementations for several fundamental types like
 float and size_t not currently implemented in the Python version.
 """
-
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import  sys
 
 from cwrap import CFILE, BaseCClass
-
 
 
 class VectorTemplate(BaseCClass):

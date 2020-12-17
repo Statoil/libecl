@@ -14,8 +14,6 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-
-from __future__ import print_function
 import datetime
 from ecl.rft import EclRFTFile, EclRFTCell, EclPLTCell, WellTrajectory
 from tests import EclTest, equinor_test

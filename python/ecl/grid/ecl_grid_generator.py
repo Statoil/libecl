@@ -18,7 +18,6 @@ import itertools, numpy
 from math import sqrt
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import IntVector
 from ecl import EclDataType
 from ecl.eclfile import EclKW
@@ -706,5 +705,3 @@ class EclGridGenerator:
                     "Either change one of the lower bounds by 1 " +
                     "or activate decomposition_change."
                     )
-
-monkey_the_camel(EclGridGenerator, 'createRectangular', EclGridGenerator.create_rectangular, classmethod)

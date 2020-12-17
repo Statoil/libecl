@@ -37,9 +37,6 @@ files. This module also has (some) support for working with GRDECL
 The ecl_kw.py implementation wraps the ecl_kw.c implementation from
 the libecl library.
 """
-
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import ctypes
 import warnings
 import numpy
@@ -47,16 +44,11 @@ import numpy
 from cwrap import CFILE, BaseCClass
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl import EclDataType
 from ecl import EclTypeEnum, EclUtil
 
 from .fortio import FortIO
 
-def dump_type_deprecation_warning():
-    warnings.warn("EclTypeEnum is deprecated. " +
-        "You should instead provide an EclDataType",
-        DeprecationWarning)
 
 def constant_size_data_type(ecl_type):
     return (ecl_type in [
@@ -1226,22 +1218,3 @@ class EclKW(BaseCClass):
         ok = self._safe_div( divisor )
         if not ok:
             raise NotImplementedError("safe_div not implemented for this type combination")
-
-
-
-
-monkey_the_camel(EclKW, 'intKeywords', EclKW.int_keywords, classmethod)
-monkey_the_camel(EclKW, 'isNumeric', EclKW.is_numeric)
-monkey_the_camel(EclKW, 'fortIOSize', EclKW.fort_io_size)
-monkey_the_camel(EclKW, 'setName', EclKW.set_name)
-monkey_the_camel(EclKW, 'getName', EclKW.get_name)
-monkey_the_camel(EclKW, 'getMinMax', EclKW.get_min_max)
-monkey_the_camel(EclKW, 'getMax', EclKW.get_max)
-monkey_the_camel(EclKW, 'getMin', EclKW.get_min)
-monkey_the_camel(EclKW, 'typeName', EclKW.type_name)
-monkey_the_camel(EclKW, 'getEclType', EclKW.get_ecl_type)
-monkey_the_camel(EclKW, 'numpyView', EclKW.numpy_view)
-monkey_the_camel(EclKW, 'numpyCopy', EclKW.numpy_copy)
-monkey_the_camel(EclKW, 'fixUninitialized', EclKW.fix_uninitialized)
-monkey_the_camel(EclKW, 'getDataPtr', EclKW.get_data_ptr)
-monkey_the_camel(EclKW, 'firstDifferent', EclKW.first_different)

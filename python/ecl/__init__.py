@@ -61,7 +61,7 @@ import warnings
 warnings.filterwarnings(
     action='always',
     category=DeprecationWarning,
-    module=r'ecl|ert',
+    module=r'ecl',
 )
 
 from cwrap import Prototype

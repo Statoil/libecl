@@ -24,9 +24,7 @@ import datetime
 # argument. In the python code this order has been reversed.
 
 from cwrap import BaseCClass
-from ecl.util.util import monkey_the_camel
 from ecl import EclPrototype
-
 
 
 class EclSumKeyWordVector(BaseCClass):
@@ -71,7 +69,3 @@ class EclSumKeyWordVector(BaseCClass):
 
     def copy(self, ecl_sum):
         return self._alloc_copy(ecl_sum)
-
-
-monkey_the_camel(EclSumKeyWordVector, 'addKeyword', EclSumKeyWordVector.add_keyword)
-monkey_the_camel(EclSumKeyWordVector, 'addKeywords', EclSumKeyWordVector.add_keywords)

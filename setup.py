@@ -25,12 +25,8 @@ skbuild.setup(
     platforms="any",
     install_requires=[
         "cwrap",
-        "functools32;python_version=='2.7'",
-        "future",
-        "numpy;python_version>='3.0'",
-        "numpy<=1.16.6;python_version=='2.7'",
-        "pandas;python_version>='3.0'",
-        "pandas<=0.25.3;python_version=='2.7'",
+        "numpy",
+        "pandas",
         "six"
     ],
     entry_points={
@@ -62,9 +58,9 @@ skbuild.setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Natural Language :: English",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Physics",
         "Topic :: Software Development :: Libraries",

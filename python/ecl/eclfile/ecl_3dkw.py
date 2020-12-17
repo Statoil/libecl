@@ -13,12 +13,8 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
+from ecl.eclfile.ecl_kw import EclKW
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-
-from ecl.util.util import monkey_the_camel
-from .ecl_kw import EclKW
 
 class Ecl3DKW(EclKW):
     """
@@ -230,10 +226,3 @@ class Ecl3DKW(EclKW):
 
     def get_default(self):
         return self.default_value
-
-
-monkey_the_camel(Ecl3DKW, 'castFromKW', Ecl3DKW.cast_from_kw, classmethod)
-monkey_the_camel(Ecl3DKW, 'compressedCopy', Ecl3DKW.compressed_copy)
-monkey_the_camel(Ecl3DKW, 'globalCopy', Ecl3DKW.global_copy)
-monkey_the_camel(Ecl3DKW, 'setDefault', Ecl3DKW.set_default)
-monkey_the_camel(Ecl3DKW, 'getDefault', Ecl3DKW.get_default)

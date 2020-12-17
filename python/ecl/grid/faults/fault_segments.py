@@ -13,12 +13,6 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-
-from __future__ import print_function
-
-from ecl.util.util import monkey_the_camel
-
-
 class FaultSegment(object):
 
     def __init__(self, C1, C2):
@@ -160,15 +154,3 @@ class SegmentMap(object):
         for d in self.__segment_map.values():
             for (C,S) in d.iteritems():
                 print(S)
-
-
-
-monkey_the_camel(FaultSegment, 'getCorners', FaultSegment.get_corners)
-monkey_the_camel(FaultSegment, 'getC1', FaultSegment.get_c1)
-monkey_the_camel(FaultSegment, 'getC2', FaultSegment.get_c2)
-
-monkey_the_camel(SegmentMap, 'addSegment', SegmentMap.add_segment)
-monkey_the_camel(SegmentMap, 'delSegment', SegmentMap.del_segment)
-monkey_the_camel(SegmentMap, 'popStart', SegmentMap.pop_start)
-monkey_the_camel(SegmentMap, 'popNext', SegmentMap.pop_next)
-monkey_the_camel(SegmentMap, 'printContent', SegmentMap.print_content)

@@ -13,11 +13,8 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-
-from __future__ import absolute_import, division, print_function, unicode_literals
 from six import string_types
 from cwrap import BaseCClass
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import CTime
 from ecl import EclPrototype
 
@@ -197,10 +194,3 @@ class EclFileView(BaseCClass):
 
         view.setParent(parent=self)
         return view
-
-
-monkey_the_camel(EclFileView, 'numKeywords', EclFileView.num_keywords)
-monkey_the_camel(EclFileView, 'uniqueSize', EclFileView.unique_size)
-monkey_the_camel(EclFileView, 'blockView2', EclFileView.block_view2)
-monkey_the_camel(EclFileView, 'blockView', EclFileView.block_view)
-monkey_the_camel(EclFileView, 'restartView', EclFileView.restart_view)

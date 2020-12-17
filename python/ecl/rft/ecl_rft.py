@@ -16,13 +16,9 @@
 """
 Module for loading ECLIPSE RFT files.
 """
-
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 from cwrap import BaseCClass
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import CTime
 from ecl.rft import EclRFTCell, EclPLTCell
 
@@ -308,10 +304,3 @@ class EclRFTFile(BaseCClass):
     def __repr__(self):
         w = len(self)
         return self._create_repr('wells = %d' % w)
-
-
-monkey_the_camel(EclRFT, 'getWellName', EclRFT.get_well_name)
-monkey_the_camel(EclRFT, 'getDate', EclRFT.get_date)
-
-monkey_the_camel(EclRFTFile, 'getNumWells', EclRFTFile.get_num_wells)
-monkey_the_camel(EclRFTFile, 'getHeaders', EclRFTFile.get_headers)

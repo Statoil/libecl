@@ -13,11 +13,8 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-
-from __future__ import print_function
 import sys
 
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import DoubleVector
 from ecl.util.geometry import CPolyline
 
@@ -237,12 +234,3 @@ class FaultLine(object):
             (J2, I2) = divmod(C2, self.__grid.getNX() + 1)
             print('[Corner:%5d IJ:(%3d,%d)] -> [Corner:%5d IJ:(%3d,%d)]'
                   % (C1, I1, J1, C2, I2, J2))
-
-
-monkey_the_camel(FaultLine, 'tryAppend', FaultLine.try_append)
-monkey_the_camel(FaultLine, 'getK', FaultLine.get_k)
-monkey_the_camel(FaultLine, 'getPolyline', FaultLine.get_polyline)
-monkey_the_camel(FaultLine, 'getIJPolyline', FaultLine.get_ij_polyline)
-monkey_the_camel(FaultLine, 'getNeighborCells', FaultLine.get_neighbor_cells)
-monkey_the_camel(FaultLine, 'startPoint', FaultLine.start_point)
-monkey_the_camel(FaultLine, 'endPoint', FaultLine.end_point)

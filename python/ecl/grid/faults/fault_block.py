@@ -17,7 +17,6 @@
 import ctypes
 from cwrap import BaseCClass
 
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import DoubleVector, IntVector
 from ecl import EclPrototype
 from ecl.util.geometry import Polyline, GeometryTools, CPolylineCollection
@@ -175,16 +174,3 @@ class FaultBlock(BaseCClass):
 
     def get_parent_layer(self):
         return self.parent()
-
-
-monkey_the_camel(FaultBlock, 'getCentroid', FaultBlock.get_centroid)
-monkey_the_camel(FaultBlock, 'countInside', FaultBlock.count_inside)
-monkey_the_camel(FaultBlock, 'getBlockID', FaultBlock.get_block_id)
-monkey_the_camel(FaultBlock, 'assignToRegion', FaultBlock.assign_to_region)
-monkey_the_camel(FaultBlock, 'getRegionList', FaultBlock.get_region_list)
-monkey_the_camel(FaultBlock, 'addCell', FaultBlock.add_cell)
-monkey_the_camel(FaultBlock, 'getGlobalIndexList', FaultBlock.get_global_index_list)
-monkey_the_camel(FaultBlock, 'getEdgePolygon', FaultBlock.get_edge_polygon)
-monkey_the_camel(FaultBlock, 'containsPolyline', FaultBlock.contains_polyline)
-monkey_the_camel(FaultBlock, 'getNeighbours', FaultBlock.get_neighbours)
-monkey_the_camel(FaultBlock, 'getParentLayer', FaultBlock.get_parent_layer)

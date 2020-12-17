@@ -16,7 +16,6 @@
 
 import numpy as np
 
-from ecl.util.util import monkey_the_camel
 from ecl.util.geometry import Polyline, CPolyline, GeometryTools
 
 from .fault_line import FaultLine
@@ -621,36 +620,3 @@ class Fault(object):
             return xy_list
         else:
             return fault1.endJoin(fault2, k)
-
-
-monkey_the_camel(FaultLayer, 'addSegment', FaultLayer.add_segment)
-monkey_the_camel(FaultLayer, 'getK', FaultLayer.get_k)
-monkey_the_camel(FaultLayer, 'getNeighborCells', FaultLayer.get_neighbor_cells)
-monkey_the_camel(FaultLayer, 'getPolyline', FaultLayer.get_polyline)
-monkey_the_camel(FaultLayer, 'getIJPolyline', FaultLayer.get_ij_polyline)
-monkey_the_camel(FaultLayer, 'numLines', FaultLayer.num_lines)
-monkey_the_camel(FaultLayer, 'processSegments', FaultLayer.process_segments)
-
-monkey_the_camel(Fault, 'hasLayer', Fault.has_layer)
-monkey_the_camel(Fault, 'addLayer', Fault.add_layer)
-monkey_the_camel(Fault, 'createSegment', Fault.create_segment)
-monkey_the_camel(Fault, 'addRecord', Fault.add_record)
-monkey_the_camel(Fault, 'getName', Fault.get_name)
-monkey_the_camel(Fault, 'getNeighborCells', Fault.get_neighbor_cells)
-monkey_the_camel(Fault, 'getPolyline', Fault.get_polyline)
-monkey_the_camel(Fault, 'getIJPolyline', Fault.get_ij_polyline)
-monkey_the_camel(Fault, 'numLines', Fault.num_lines)
-monkey_the_camel(Fault, 'connectWithPolyline', Fault.connect_with_polyline)
-monkey_the_camel(Fault, 'extendToPolyline', Fault.extend_to_polyline)
-monkey_the_camel(Fault, 'intersectsPolyline', Fault.intersects_polyline)
-monkey_the_camel(Fault, 'intersectsFault', Fault.intersects_fault)
-monkey_the_camel(Fault, 'extendToFault', Fault.extend_to_fault)
-monkey_the_camel(Fault, 'extendToEdge', Fault.extend_to_edge)
-monkey_the_camel(Fault, 'extendToBBox', Fault.extend_to_b_box)
-monkey_the_camel(Fault, 'endJoin', Fault.end_join)
-monkey_the_camel(Fault, 'connectPolylineOnto', Fault.connect_polyline_onto)
-monkey_the_camel(Fault, 'extendPolylineOnto', Fault.extend_polyline_onto)
-monkey_the_camel(Fault, 'intersectFaultRays', Fault.intersect_fault_rays, staticmethod)
-monkey_the_camel(Fault, 'intRay', Fault.int_ray, staticmethod)
-monkey_the_camel(Fault, 'getEndRays', Fault.get_end_rays)
-monkey_the_camel(Fault, 'joinFaults', Fault.join_faults, staticmethod)

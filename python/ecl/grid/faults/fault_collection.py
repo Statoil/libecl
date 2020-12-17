@@ -15,7 +15,6 @@
 #  for more details.
 import re
 
-from ecl.util.util import monkey_the_camel
 from ecl.grid import EclGrid
 from .fault import Fault
 
@@ -125,11 +124,3 @@ class FaultCollection(object):
             for line in fileH:
                 if line.startswith("FAULTS"):
                     self.loadFaults(grid, fileH)
-
-
-monkey_the_camel(FaultCollection, 'getGrid', FaultCollection.get_grid)
-monkey_the_camel(FaultCollection, 'getFault', FaultCollection.get_fault)
-monkey_the_camel(FaultCollection, 'hasFault', FaultCollection.has_fault)
-monkey_the_camel(FaultCollection, 'addFault', FaultCollection.add_fault)
-monkey_the_camel(FaultCollection, 'splitLine', FaultCollection.split_line)
-monkey_the_camel(FaultCollection, 'loadFaults', FaultCollection.load_faults)

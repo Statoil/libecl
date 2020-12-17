@@ -44,7 +44,6 @@ from cwrap import BaseCClass
 
 from ecl import EclPrototype
 from ecl.util.util import CTime
-from ecl.util.util import monkey_the_camel
 from ecl import EclFileEnum
 from ecl.eclfile import EclKW, EclFileView
 
@@ -705,17 +704,5 @@ class EclFileContextManager(object):
         return False
 
 
-def openEclFile( file_name , flags = 0):
-    print('The function openEclFile is deprecated, use open_ecl_file.')
-    return open_ecl_file(file_name, flags)
-
 def open_ecl_file(file_name, flags=0):
     return EclFileContextManager(EclFile(file_name, flags))
-
-
-
-monkey_the_camel(EclFile, 'getFileType', EclFile.get_filetype, staticmethod)
-monkey_the_camel(EclFile, 'blockView', EclFile.block_view)
-monkey_the_camel(EclFile, 'blockView2', EclFile.block_view2)
-monkey_the_camel(EclFile, 'restartView', EclFile.restart_view)
-monkey_the_camel(EclFile, 'getFilename', EclFile.get_filename)

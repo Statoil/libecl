@@ -14,8 +14,6 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-from __future__ import print_function
-from unittest import skipIf
 import warnings
 import cwrap
 

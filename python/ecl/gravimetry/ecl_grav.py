@@ -23,9 +23,7 @@ ecl_grav.c implementation in the libecl library.
 """
 from cwrap import BaseCClass
 
-from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
-from ecl import EclPhaseEnum
+from ecl import EclPrototype, EclPhaseEnum
 import ecl.eclfile
 
 class EclGrav(BaseCClass):
@@ -216,5 +214,3 @@ class EclGrav(BaseCClass):
 
     def free(self):
         self._free()
-
-monkey_the_camel(EclGrav, 'addSurvey', EclGrav.add_survey)

@@ -31,7 +31,6 @@ import ctypes
 from cwrap import BaseCClass
 
 import ecl
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import IntVector
 
 from ecl import EclPrototype
@@ -1056,12 +1055,3 @@ class EclRegion(BaseCClass):
 
     def set_name(self , name):
         self._set_name( name )
-
-monkey_the_camel(EclRegion, 'selectTrue', EclRegion.select_true)
-monkey_the_camel(EclRegion, 'selectFalse', EclRegion.select_false)
-monkey_the_camel(EclRegion, 'selectFromLayer', EclRegion.select_from_layer)
-monkey_the_camel(EclRegion, 'getActiveList', EclRegion.get_active_list)
-monkey_the_camel(EclRegion, 'getGlobalList', EclRegion.get_global_list)
-monkey_the_camel(EclRegion, 'getIJKList', EclRegion.get_ijk_list)
-monkey_the_camel(EclRegion, 'getName', EclRegion.get_name)
-monkey_the_camel(EclRegion, 'setName', EclRegion.set_name)

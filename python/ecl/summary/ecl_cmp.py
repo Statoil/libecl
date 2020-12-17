@@ -14,7 +14,6 @@
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
 
-from ecl.util.util import monkey_the_camel
 from ecl.summary import EclSum
 
 class EclCase(object):
@@ -168,17 +167,3 @@ class EclCmp(object):
         Will return a list of wells keys in the test case.
         """
         return self.test_case.wells()
-
-
-
-monkey_the_camel(EclCase, 'loadSummary', EclCase.load_summary)
-monkey_the_camel(EclCase, 'startTimeEqual', EclCase.start_time_equal)
-monkey_the_camel(EclCase, 'endTimeEqual', EclCase.end_time_equal)
-monkey_the_camel(EclCase, 'cmpSummaryVector', EclCase.cmp_summary_vector)
-
-monkey_the_camel(EclCmp, 'initCheck', EclCmp.init_check)
-monkey_the_camel(EclCmp, 'hasSummaryVector', EclCmp.has_summary_vector)
-monkey_the_camel(EclCmp, 'endTimeEqual', EclCmp.end_time_equal)
-monkey_the_camel(EclCmp, 'cmpSummaryVector', EclCmp.cmp_summary_vector)
-monkey_the_camel(EclCmp, 'testKeys', EclCmp.test_keys)
-monkey_the_camel(EclCmp, 'testWells', EclCmp.test_wells)

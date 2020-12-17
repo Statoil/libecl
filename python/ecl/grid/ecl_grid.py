@@ -35,7 +35,6 @@ import itertools
 from cwrap import CFILE, BaseCClass, load, open as copen
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import IntVector
 from ecl import  EclDataType, EclUnitTypeEnum, EclTypeEnum
 from ecl.eclfile import EclKW, FortIO
@@ -1407,32 +1406,3 @@ class EclGrid(BaseCClass):
     @property
     def unit_system(self):
         return self._get_unit_system()
-
-monkey_the_camel(EclGrid, 'loadFromGrdecl', EclGrid.load_from_grdecl, classmethod)
-monkey_the_camel(EclGrid, 'loadFromFile', EclGrid.load_from_file, classmethod)
-monkey_the_camel(EclGrid, 'createRectangular', EclGrid.create_rectangular, classmethod)
-monkey_the_camel(EclGrid, 'dualGrid', EclGrid.dual_grid)
-monkey_the_camel(EclGrid, 'getDims', EclGrid.get_dims)
-monkey_the_camel(EclGrid, 'getNX', EclGrid.get_nx)
-monkey_the_camel(EclGrid, 'getNY', EclGrid.get_ny)
-monkey_the_camel(EclGrid, 'getNZ', EclGrid.get_nz)
-monkey_the_camel(EclGrid, 'getGlobalSize', EclGrid.get_global_size)
-monkey_the_camel(EclGrid, 'getNumActive', EclGrid.get_num_active)
-monkey_the_camel(EclGrid, 'getNumActiveFracture', EclGrid.get_num_active_fracture)
-monkey_the_camel(EclGrid, 'getBoundingBox2D', EclGrid.get_bounding_box_2d)
-monkey_the_camel(EclGrid, 'getName', EclGrid.get_name)
-monkey_the_camel(EclGrid, 'validCellGeometry', EclGrid.valid_cell_geometry)
-monkey_the_camel(EclGrid, 'getNodePos', EclGrid.get_node_pos)
-monkey_the_camel(EclGrid, 'getCellCorner', EclGrid.get_cell_corner)
-monkey_the_camel(EclGrid, 'getNodeXYZ', EclGrid.get_node_xyz)
-monkey_the_camel(EclGrid, 'getLayerXYZ', EclGrid.get_layer_xyz)
-monkey_the_camel(EclGrid, 'findCellXY', EclGrid.find_cell_xy)
-monkey_the_camel(EclGrid, 'findCellCornerXY', EclGrid.find_cell_corner_xy)
-monkey_the_camel(EclGrid, 'getCellDims', EclGrid.get_cell_dims)
-monkey_the_camel(EclGrid, 'getNumLGR', EclGrid.get_num_lgr)
-monkey_the_camel(EclGrid, 'createKW', EclGrid.create_kw)
-monkey_the_camel(EclGrid, 'create3D', EclGrid.create_3d)
-monkey_the_camel(EclGrid, 'compressedKWCopy', EclGrid.compressed_kw_copy)
-monkey_the_camel(EclGrid, 'globalKWCopy', EclGrid.global_kw_copy)
-monkey_the_camel(EclGrid, 'exportACTNUMKw', EclGrid.export_ACTNUM_kw)
-monkey_the_camel(EclGrid, 'createVolumeKeyword', EclGrid.create_volume_keyword)

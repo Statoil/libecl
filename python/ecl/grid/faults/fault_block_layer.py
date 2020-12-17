@@ -13,11 +13,8 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-
-from __future__ import print_function
 from cwrap import BaseCClass
 
-from ecl.util.util import monkey_the_camel
 from ecl import EclDataType
 from ecl import EclPrototype
 from ecl.grid.faults import Fault
@@ -217,20 +214,3 @@ class FaultBlockLayer(BaseCClass):
     def cell_contact(self, p1, p2):
         layer = self.getGeoLayer()
         return layer.cellContact(p1,p2)
-
-monkey_the_camel(FaultBlockLayer, 'scanKeyword', FaultBlockLayer.scan_keyword)
-monkey_the_camel(FaultBlockLayer, 'loadKeyword', FaultBlockLayer.load_keyword)
-monkey_the_camel(FaultBlockLayer, 'getBlock', FaultBlockLayer.get_block)
-monkey_the_camel(FaultBlockLayer, 'deleteBlock', FaultBlockLayer.delete_block)
-monkey_the_camel(FaultBlockLayer, 'addBlock', FaultBlockLayer.add_block)
-monkey_the_camel(FaultBlockLayer, 'getNextID', FaultBlockLayer.get_next_id)
-monkey_the_camel(FaultBlockLayer, 'getK', FaultBlockLayer.get_k)
-monkey_the_camel(FaultBlockLayer, 'scanLayer', FaultBlockLayer.scan_layer)
-monkey_the_camel(FaultBlockLayer, 'insertBlockContent', FaultBlockLayer.insert_block_content)
-monkey_the_camel(FaultBlockLayer, 'exportKeyword', FaultBlockLayer.export_keyword)
-monkey_the_camel(FaultBlockLayer, 'addFaultBarrier', FaultBlockLayer.add_fault_barrier)
-monkey_the_camel(FaultBlockLayer, 'addFaultLink', FaultBlockLayer.add_fault_link)
-monkey_the_camel(FaultBlockLayer, 'joinFaults', FaultBlockLayer.join_faults)
-monkey_the_camel(FaultBlockLayer, 'addPolylineBarrier', FaultBlockLayer.add_polyline_barrier)
-monkey_the_camel(FaultBlockLayer, 'getGeoLayer', FaultBlockLayer.get_geo_layer)
-monkey_the_camel(FaultBlockLayer, 'cellContact', FaultBlockLayer.cell_contact)

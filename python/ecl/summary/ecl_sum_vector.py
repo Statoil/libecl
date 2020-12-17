@@ -13,8 +13,6 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-
-from __future__ import print_function
 import warnings
 from ecl.summary.ecl_sum_node import EclSumNode
 
@@ -94,19 +92,6 @@ class EclSumVector(object):
         In the case of lab unit this will be hours.
         """
         return self.__days
-
-    @property
-    def mpl_dates(self):
-        """
-        All the dates as numpy vector of dates in matplotlib format.
-        This property will be replaced by numpy_dates, but is kept for
-        backwards-compatibility for the time-being. Usage will trigger
-        a depreciation warning.
-        """
-        warnings.warn("The mpl_dates property has been deprecated - use numpy_dates instead",
-                     DeprecationWarning)
-
-        return self.parent.get_mpl_dates(self.report_only)
 
     @property
     def numpy_dates(self):

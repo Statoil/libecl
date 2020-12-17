@@ -14,12 +14,6 @@
 #
 #  See the GNU General Public License at <http://www.gnu.org/licenses/gpl.html>
 #  for more details.
-
-try:
-    from unittest2 import skipIf
-except ImportError:
-    from unittest import skipIf
-
 import warnings
 
 from ecl.summary import EclSumVector, EclSum

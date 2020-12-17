@@ -18,7 +18,6 @@ import re
 import datetime
 import numbers
 
-from ecl.util.util import monkey_the_camel
 from ecl.summary import EclSum
 
 
@@ -205,16 +204,3 @@ varDict[\"npv\"] = npv
         varDict = {}
         eval(byteCode)
         return varDict["npv"]
-
-
-
-monkey_the_camel(NPVPriceVector, 'addItem', NPVPriceVector.add_item)
-monkey_the_camel(NPVPriceVector, 'assertDate', NPVPriceVector.assert_date, staticmethod)
-monkey_the_camel(NPVPriceVector, 'evalDate', NPVPriceVector.eval_date)
-
-monkey_the_camel(EclNPV, 'getExpression', EclNPV.get_expression)
-monkey_the_camel(EclNPV, 'setExpression', EclNPV.set_expression)
-monkey_the_camel(EclNPV, 'getKeyList', EclNPV.get_key_list)
-monkey_the_camel(EclNPV, 'addKey', EclNPV.add_key)
-monkey_the_camel(EclNPV, 'parseExpression', EclNPV.parse_expression)
-monkey_the_camel(EclNPV, 'evalNPV', EclNPV.eval_npv)
