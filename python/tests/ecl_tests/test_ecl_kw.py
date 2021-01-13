@@ -37,6 +37,12 @@ def copy_offset():
     copy = src.sub_copy(200, 100)
 
 
+def test_ecl_kw_name():
+    name = "some_really_long_name" * 100
+    kw = EclKW(name, 3, EclDataType.ECL_INT)
+    assert kw.name == name
+
+
 class KWTest(EclTest):
 
     def test_name(self):

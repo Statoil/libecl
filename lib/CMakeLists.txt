@@ -214,7 +214,7 @@ if (NOT BUILD_TESTS)
 endif ()
 
 
-add_executable(ecl_test_suite tests/test_ecl_grid.cpp tests/test_ecl_util.cpp tests/testsuite.cpp)
+add_executable(ecl_test_suite tests/test_ecl_kw.cpp tests/test_ecl_grid.cpp tests/test_ecl_util.cpp tests/testsuite.cpp)
 if (CMAKE_COMPILER_IS_GNUCC)
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8)
         target_compile_options(ecl_test_suite PRIVATE -DFS_EXPERIMENTAL)
