@@ -513,7 +513,7 @@ class EclSum(BaseCClass):
             raise ValueError("No valid key")
 
         if time_index is None:
-            time_index = self.numpy_dates
+            time_index = self.dates
             data = numpy.zeros([len(time_index), len(keywords)])
             EclSum._init_pandas_frame(self, keywords,data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
         else:
@@ -535,7 +535,7 @@ class EclSum(BaseCClass):
             unit = "UNIT"
             if len(lst) > 1:
                 nums = []
-                if lst[1][0].isdigit():       
+                if lst[1][0].isdigit():
                     nums = re.split(',', lst[1])
                 else:
                     wgname = lst[1]
@@ -550,14 +550,21 @@ class EclSum(BaseCClass):
                     num = i + j * dims[0] + k * dims[0]*dims[1] + 1
                 elif len(nums) == 1:
                     num = int(nums[0])
-                      
-            var_list.append( [kw, wgname, num, unit] )     
-        return var_list   
+
+            var_list.append( [kw, wgname, num, unit] )
+        return var_list
 
     @classmethod
     def from_pandas(cls, case, frame, dims = None, headers = None):
-        start_time = frame.index[0]    
-        var_list = []        
+        start_time = frame.index[0]
+
+        # Avoid Pandas or numpy timestamps, to avoid Pandas attempting to create
+        # timestamp64[ns] indices (which can't go beyond year 2262)
+        # https://github.com/pandas-dev/pandas/issues/39727
+        if isinstance(start_time, pandas.Timestamp):
+            start_time = start_time.to_pydatetime()
+
+        var_list = []
         if headers is None:
              header_list = EclSum._compile_headers_list( frame.columns.values, dims )
         else:
@@ -565,8 +572,8 @@ class EclSum(BaseCClass):
         if dims is None:
              dims = [1,1,1];
         ecl_sum = EclSum.writer(case,
-                                start_time.to_pydatetime(),
-                                dims[0], dims[1], dims[2])  
+                                start_time,
+                                dims[0], dims[1], dims[2])
         for kw, wgname, num, unit in header_list:
              var_list.append( ecl_sum.addVariable( kw , wgname = wgname , num = num, unit =unit).getKey1() )
 
