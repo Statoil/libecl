@@ -15,7 +15,6 @@
 #  for more details.
 import re
 
-from ecl.util.util import monkey_the_camel
 from ecl.grid import EclGrid
 from .fault import Fault
 
@@ -77,7 +76,7 @@ class FaultCollection(object):
 
 
     def add_fault(self, fault):
-        self.__fault_map[fault.getName()] = fault
+        self.__fault_map[fault.get_name()] = fault
         self.__fault_list.append(fault)
 
 
@@ -110,26 +109,18 @@ class FaultCollection(object):
                 break
 
             if line:
-                (name, I1, I2, J1, J2, K1, K2, face) = self.splitLine(line)
-                if not self.hasFault(name):
+                (name, I1, I2, J1, J2, K1, K2, face) = self.split_line(line)
+                if not self.has_fault(name):
                     fault = Fault(grid, name)
-                    self.addFault(fault)
+                    self.add_fault(fault)
                 else:
-                    fault = self.getFault(name)
+                    fault = self.get_fault(name)
 
-                fault.addRecord(I1, I2, J1, J2, K1, K2, face)
+                fault.add_record(I1, I2, J1, J2, K1, K2, face)
 
 
     def load(self, grid, file_name):
         with open(file_name) as fileH:
             for line in fileH:
                 if line.startswith("FAULTS"):
-                    self.loadFaults(grid, fileH)
-
-
-monkey_the_camel(FaultCollection, 'getGrid', FaultCollection.get_grid)
-monkey_the_camel(FaultCollection, 'getFault', FaultCollection.get_fault)
-monkey_the_camel(FaultCollection, 'hasFault', FaultCollection.has_fault)
-monkey_the_camel(FaultCollection, 'addFault', FaultCollection.add_fault)
-monkey_the_camel(FaultCollection, 'splitLine', FaultCollection.split_line)
-monkey_the_camel(FaultCollection, 'loadFaults', FaultCollection.load_faults)
+                    self.load_faults(grid, fileH)

@@ -17,7 +17,6 @@
 import ctypes
 from cwrap import BaseCClass
 
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import DoubleVector, IntVector
 from ecl import EclPrototype
 from ecl.util.geometry import Polyline, GeometryTools, CPolylineCollection
@@ -84,7 +83,7 @@ class FaultBlock(BaseCClass):
             raise TypeError("Index:%s wrong type - integer expected")
 
     def __str__(self):
-        return "Block ID: %d" % self.getBlockID()
+        return "Block ID: %d" % self.get_block_id()
 
 
     def __len__(self):
@@ -166,25 +165,12 @@ class FaultBlock(BaseCClass):
 
         self._get_neighbours(connected_only, polylines, neighbour_id_list)
 
-        parent_layer = self.getParentLayer()
+        parent_layer = self.get_parent_layer()
         neighbour_list = []
         for id in neighbour_id_list:
-            neighbour_list.append(parent_layer.getBlock(id))
+            neighbour_list.append(parent_layer.get_block(id))
         return neighbour_list
 
 
     def get_parent_layer(self):
         return self.parent()
-
-
-monkey_the_camel(FaultBlock, 'getCentroid', FaultBlock.get_centroid)
-monkey_the_camel(FaultBlock, 'countInside', FaultBlock.count_inside)
-monkey_the_camel(FaultBlock, 'getBlockID', FaultBlock.get_block_id)
-monkey_the_camel(FaultBlock, 'assignToRegion', FaultBlock.assign_to_region)
-monkey_the_camel(FaultBlock, 'getRegionList', FaultBlock.get_region_list)
-monkey_the_camel(FaultBlock, 'addCell', FaultBlock.add_cell)
-monkey_the_camel(FaultBlock, 'getGlobalIndexList', FaultBlock.get_global_index_list)
-monkey_the_camel(FaultBlock, 'getEdgePolygon', FaultBlock.get_edge_polygon)
-monkey_the_camel(FaultBlock, 'containsPolyline', FaultBlock.contains_polyline)
-monkey_the_camel(FaultBlock, 'getNeighbours', FaultBlock.get_neighbours)
-monkey_the_camel(FaultBlock, 'getParentLayer', FaultBlock.get_parent_layer)

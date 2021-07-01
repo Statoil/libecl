@@ -17,7 +17,7 @@
 from cwrap import BaseCClass
 from ecl import EclFileEnum, EclFileFlagEnum, EclPrototype
 from ecl.eclfile import Ecl3DFile, EclFile
-from ecl.util.util import CTime, monkey_the_camel
+from ecl.util.util import CTime
 
 
 class EclRestartHead(BaseCClass):
@@ -80,7 +80,7 @@ class EclRestartFile(Ecl3DFile):
         'nactive' or 'nx*ny*nz' elements.
         """
 
-        file_type , report_step , fmt_file = EclFile.getFileType( filename )
+        file_type , report_step , fmt_file = EclFile.get_filetype( filename )
         if not file_type in [EclFileEnum.ECL_RESTART_FILE, EclFileEnum.ECL_UNIFIED_RESTART_FILE]:
             raise ValueError('The input filename "%s" does not correspond to a restart file.  Please follow the Eclipse naming conventions'
                              % filename)
@@ -107,7 +107,7 @@ class EclRestartFile(Ecl3DFile):
             self.rst_headers = []
             if self.unified():
                 for index in range(self.num_named_kw("SEQNUM")):
-                    self.rst_headers.append( EclRestartHead( rst_view = self.restartView( seqnum_index = index )))
+                    self.rst_headers.append( EclRestartHead( rst_view = self.restart_view( seqnum_index = index )))
             else:
                 intehead_kw = self["INTEHEAD"][0]
                 doubhead_kw = self["DOUBHEAD"][0]
@@ -148,10 +148,3 @@ class EclRestartFile(Ecl3DFile):
     def get_header(self, index):
         self.assertHeaders()
         return self.rst_headers[index]
-
-monkey_the_camel(EclRestartHead, 'getReportStep', EclRestartHead.get_report_step)
-monkey_the_camel(EclRestartHead, 'getSimDate', EclRestartHead.get_sim_date)
-monkey_the_camel(EclRestartHead, 'getSimDays', EclRestartHead.get_sim_days)
-
-monkey_the_camel(EclRestartFile, 'assertHeaders', EclRestartFile.assert_headers)
-monkey_the_camel(EclRestartFile, 'timeList', EclRestartFile.time_list)

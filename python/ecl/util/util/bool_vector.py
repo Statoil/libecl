@@ -101,7 +101,7 @@ class BoolVector(VectorTemplate):
         """
         return cls._create_active_mask(range_string)
 
-    def updateActiveMask(self, range_string):
+    def update_activeMask(self, range_string):
         """
         Updates a bool vector based on a range string.
         @type range_string: str

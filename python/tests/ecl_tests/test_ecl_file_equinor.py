@@ -32,7 +32,7 @@ class EclFileEquinorTest(EclTest):
         self.test_fmt_file = self.createTestPath("Equinor/ECLIPSE/Gurbat/ECLIPSE.FUNRST")
 
     def assertFileType(self , filename , expected):
-        file_type , step , fmt_file = EclFile.getFileType(filename)
+        file_type , step , fmt_file = EclFile.get_filetype(filename)
         self.assertEqual( file_type , expected[0] )
         self.assertEqual( fmt_file , expected[1] )
         self.assertEqual( step , expected[2] )
@@ -140,12 +140,12 @@ class EclFileEquinorTest(EclTest):
     def test_restart_view(self):
         f = EclFile( self.test_file )
         with self.assertRaises(ValueError):
-            v = f.restartView( )
+            v = f.restart_view( )
 
-        v = f.restartView( sim_days = 274 )
-        v = f.restartView( sim_time = datetime.date( 2004,1,1) )
-        v = f.restartView( report_step = 30 )
-        v = f.restartView( seqnum_index = 30 )
+        v = f.restart_view( sim_days = 274 )
+        v = f.restart_view( sim_time = datetime.date( 2004,1,1) )
+        v = f.restart_view( report_step = 30 )
+        v = f.restart_view( seqnum_index = 30 )
 
 
     def test_index(self):

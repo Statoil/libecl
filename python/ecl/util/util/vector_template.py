@@ -480,7 +480,7 @@ class VectorTemplate(BaseCClass):
     def append(self, value):
         self._append(value)
 
-    def deleteBlock(self, index, block_size):
+    def delete_block(self, index, block_size):
         """
         Remove a block of size @block_size starting at @index.
 
@@ -561,13 +561,13 @@ class VectorTemplate(BaseCClass):
         return self._element_sum( )
 
 
-    def getDataPtr(self):
+    def get_dataPtr(self):
         "Low level function which returns a pointer to underlying storage"
         # Observe that the get_data_ptr() function is not implemented
         # for the TimeVector class.
         return self._get_data_ptr()
 
-    def countEqual(self , value):
+    def count_equal(self , value):
         return self._count_equal(  value )
 
 

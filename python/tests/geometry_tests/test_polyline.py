@@ -16,7 +16,7 @@ class PolylineTest(EclTest):
         with self.assertRaises(IndexError):
             polyline.isClosed()
 
-        self.assertEqual(polyline.getName(), "test line")
+        self.assertEqual(polyline.get_name(), "test line")
 
         self.assertEqual(len(polyline), 0)
 
@@ -76,7 +76,7 @@ class PolylineTest(EclTest):
 
         polyline = XYZIo.readXYZFile(self.polyline)
 
-        self.assertEqual(polyline.getName(), "pol11.xyz")
+        self.assertEqual(polyline.get_name(), "pol11.xyz")
         self.assertEqual(len(polyline), 13)
         self.assertFalse(polyline.isClosed())
         self.assertEqual(polyline[0], (390271.843750, 6606121.334396, 1441.942627))  # first point
@@ -84,7 +84,7 @@ class PolylineTest(EclTest):
 
         polyline = XYZIo.readXYZFile(self.closed_polyline)
 
-        self.assertEqual(polyline.getName(), "pol8.xyz")
+        self.assertEqual(polyline.get_name(), "pol8.xyz")
         self.assertEqual(len(polyline), 21)
         self.assertTrue(polyline.isClosed())
         self.assertEqual(polyline[0], (396202.413086, 6606091.935028, 1542.620972))  # first point

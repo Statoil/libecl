@@ -18,7 +18,6 @@ import itertools, numpy
 from math import sqrt
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import IntVector
 from ecl import EclDataType
 from ecl.eclfile import EclKW
@@ -92,7 +91,7 @@ class EclGridGenerator:
             ecl_grid = cls._alloc_rectangular(
                                  dims[0], dims[1], dims[2],
                                  dV[0], dV[1], dV[2],
-                                 actnum.getDataPtr()
+                                 actnum.get_dataPtr()
                                  )
 
         # If we have not succeeded in creatin the grid we *assume* the
@@ -128,7 +127,7 @@ class EclGridGenerator:
                 None
                 )
 
-        if not corners == [grid.getCellCorner(i, 0) for i in range(8)]:
+        if not corners == [grid.get_cell_corner(i, 0) for i in range(8)]:
             raise AssertionError("Failed to generate single cell grid. " +
                     "Did not end up the expected corners.")
 
@@ -570,7 +569,7 @@ class EclGridGenerator:
 
         """
 
-        gdims = grid.getDims()[:-1:]
+        gdims = grid.get_dims()[:-1:]
         nx, ny, nz = gdims
         ijk_bounds = cls.assert_ijk_bounds(gdims, ijk_bounds)
 
@@ -706,5 +705,3 @@ class EclGridGenerator:
                     "Either change one of the lower bounds by 1 " +
                     "or activate decomposition_change."
                     )
-
-monkey_the_camel(EclGridGenerator, 'createRectangular', EclGridGenerator.create_rectangular, classmethod)

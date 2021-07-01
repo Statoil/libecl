@@ -32,9 +32,9 @@ class Ecl3DKWTest(EclTest):
         for i in range(100):
             actnum[i] = 0
 
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1) , actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1) , actnum = actnum)
         kw = Ecl3DKW( "KW" , grid , EclDataType.ECL_FLOAT )
-        self.assertEqual( len(kw) , grid.getNumActive())
+        self.assertEqual( len(kw) , grid.get_num_active())
 
         self.assertEqual( (10,10,10) , kw.dims() )
 
@@ -44,9 +44,9 @@ class Ecl3DKWTest(EclTest):
         for i in range(100):
             actnum[i] = 0
 
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1) , actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1) , actnum = actnum)
         kw = Ecl3DKW( "KW" , grid , EclDataType.ECL_FLOAT , global_active = True)
-        self.assertEqual( len(kw) , grid.getGlobalSize())
+        self.assertEqual( len(kw) , grid.get_global_size())
 
         kw.assign(50)
         self.assertEqual( kw[0,0,0] , 50 )
@@ -59,7 +59,7 @@ class Ecl3DKWTest(EclTest):
         nx = 10
         ny = 11
         nz = 12
-        grid = EclGrid.createRectangular( (nx,ny,nz) , (1,1,1) )
+        grid = EclGrid.create_rectangular( (nx,ny,nz) , (1,1,1) )
         kw = Ecl3DKW("REGIONS" , grid , EclDataType.ECL_INT , global_active = True)
         kw.assign(3)
         self.assertEqual( 3 * nx*ny*nz , sum(kw))
@@ -69,7 +69,7 @@ class Ecl3DKWTest(EclTest):
         kw[6,6,6] = 0
 
         self.assertEqual( 3 * nx*ny*nz - 9 , sum(kw))
-        kw.fixUninitialized( grid )
+        kw.fix_uninitialized( grid )
         self.assertEqual( 3 * nx*ny*nz , sum(kw))
 
 
@@ -79,7 +79,7 @@ class Ecl3DKWTest(EclTest):
         for i in range(100):
             actnum[i] = 0
 
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1) , actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1) , actnum = actnum)
         kw = Ecl3DKW( "KW" , grid , EclDataType.ECL_FLOAT , default_value = 77)
         
         with self.assertRaises(IndexError):
@@ -106,7 +106,7 @@ class Ecl3DKWTest(EclTest):
         for i in range(100):
             actnum[i] = 0
 
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1) , actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1) , actnum = actnum)
         kw = Ecl3DKW( "KW" , grid , EclDataType.ECL_FLOAT , default_value = 77)
         
         with self.assertRaises(IndexError):
@@ -139,18 +139,18 @@ class Ecl3DKWTest(EclTest):
         for i in range(100):
             actnum[i] = 0
 
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1) , actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1) , actnum = actnum)
         kw_wrong_size  = EclKW( "KW" , 27 , EclDataType.ECL_FLOAT )
-        kw_global_size = EclKW( "KW" , grid.getGlobalSize() , EclDataType.ECL_FLOAT )
-        kw_active_size = EclKW( "KW" , grid.getNumActive()  , EclDataType.ECL_FLOAT )
+        kw_global_size = EclKW( "KW" , grid.get_global_size() , EclDataType.ECL_FLOAT )
+        kw_active_size = EclKW( "KW" , grid.get_num_active()  , EclDataType.ECL_FLOAT )
         
         with self.assertRaises(ValueError):
-            Ecl3DKW.castFromKW(kw_wrong_size , grid)
+            Ecl3DKW.cast_from_kw(kw_wrong_size , grid)
 
-        Ecl3DKW.castFromKW(kw_global_size , grid)
+        Ecl3DKW.cast_from_kw(kw_global_size , grid)
         self.assertTrue( isinstance( kw_global_size , Ecl3DKW))
 
-        Ecl3DKW.castFromKW(kw_active_size , grid , default_value = 66)
+        Ecl3DKW.cast_from_kw(kw_active_size , grid , default_value = 66)
         self.assertTrue( isinstance( kw_active_size , Ecl3DKW))
 
         self.assertEqual( kw_active_size[0,0,0] , 66)
@@ -159,10 +159,10 @@ class Ecl3DKWTest(EclTest):
 
 
     def test_default(self):
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1))
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1))
         kw  = Ecl3DKW( "KW" , grid , EclDataType.ECL_FLOAT )
-        kw.setDefault(55)
-        self.assertTrue( 55 , kw.getDefault())
+        kw.set_default(55)
+        self.assertTrue( 55 , kw.get_default())
 
 
     def test_compressed_copy(self):
@@ -170,12 +170,12 @@ class Ecl3DKWTest(EclTest):
         for i in range(500):
             actnum[2*i + 1] = 0
 
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1) , actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1) , actnum = actnum)
         kw  = Ecl3DKW( "KW" , grid , EclDataType.ECL_INT , global_active = True)
         for i in range(len(kw)):
             kw[i] = i
         
-        kw_copy = kw.compressedCopy()
+        kw_copy = kw.compressed_copy()
         self.assertTrue( isinstance( kw_copy , EclKW ) )
 
         self.assertEqual(len(kw_copy) , 500)
@@ -189,16 +189,16 @@ class Ecl3DKWTest(EclTest):
         for i in range(500):
             actnum[2*i + 1] = 0
 
-        grid = EclGrid.createRectangular( (10,10,10) , (1,1,1) , actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,10) , (1,1,1) , actnum = actnum)
         kw  = Ecl3DKW( "KW" , grid , EclDataType.ECL_INT , global_active = False)
         for i in range(len(kw)):
             kw[i] = i
 
-        kw.setDefault( 177 )
-        kw_copy = kw.globalCopy()
+        kw.set_default( 177 )
+        kw_copy = kw.global_copy()
         self.assertTrue( isinstance( kw_copy , EclKW ) )
 
         self.assertEqual(len(kw_copy) , 1000)
         for i in range(len(kw)):
             self.assertEqual(kw_copy[2*i] , i)
-            self.assertEqual(kw_copy[2*i + 1] , kw.getDefault())
+            self.assertEqual(kw_copy[2*i + 1] , kw.get_default())

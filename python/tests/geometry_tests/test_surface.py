@@ -36,8 +36,8 @@ class SurfaceTest(EclTest):
         s_args = (None, nx, ny, xinc, yinc, xstart, ystart, angle)
         s = Surface(*s_args)
         self.assertEqual(ny*nx, len(s))
-        self.assertEqual(nx, s.getNX())
-        self.assertEqual(ny, s.getNY())
+        self.assertEqual(nx, s.get_nx())
+        self.assertEqual(ny, s.get_ny())
         small = Surface (self.surface_small)
         self.assertTrue(small.headerEqual(s))
         valid = Surface (self.surface_valid)
@@ -63,8 +63,8 @@ class SurfaceTest(EclTest):
 
         s = Surface( self.surface_valid )
 
-        self.assertEqual( s.getNX( ) , 49 )
-        self.assertEqual( s.getNY( ) , 79 )
+        self.assertEqual( s.get_nx( ) , 49 )
+        self.assertEqual( s.get_ny( ) , 79 )
         self.assertEqual( len(s) , 49*79 )
 
         with self.assertRaises(IndexError):

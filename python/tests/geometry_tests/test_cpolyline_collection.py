@@ -66,11 +66,11 @@ class CPolylineCollectionTest(EclTest):
 
         tail  = p1[-1]
         self.assertEqual( tail , (2,12))
-        self.assertEqual(p1.getName() , "POLY1")
+        self.assertEqual(p1.get_name() , "POLY1")
         
         tail  = p2[-1]
         self.assertEqual( tail , (20,120))
-        self.assertEqual(p2.getName() , "POLY2")
+        self.assertEqual(p2.get_name() , "POLY2")
         
         return collection
 
@@ -85,12 +85,12 @@ class CPolylineCollectionTest(EclTest):
         p1 = c[0]
         tail  = p1[-1]
         self.assertEqual( tail , (2,12))
-        self.assertEqual(p1.getName() , "POLY1")
+        self.assertEqual(p1.get_name() , "POLY1")
         
         p2 = c[1]
         tail  = p2[-1]
         self.assertEqual( tail , (20,120))
-        self.assertEqual(p2.getName() , "POLY2")
+        self.assertEqual(p2.get_name() , "POLY2")
 
 
     def get_polyline(self):
@@ -102,7 +102,7 @@ class CPolylineCollectionTest(EclTest):
         p1 = self.get_polyline()
         tail  = p1[-1]
         self.assertEqual( tail , (2,12))
-        self.assertEqual( p1.getName() , "POLY1")
+        self.assertEqual( p1.get_name() , "POLY1")
     
     def create_coll2(self):
         coll1 = self.create_collection()
@@ -125,10 +125,10 @@ class CPolylineCollectionTest(EclTest):
         p1 = coll2["POLY1"]
         tail  = p1[-1]
         self.assertEqual( tail , (2,12))
-        self.assertEqual(p1.getName() , "POLY1")
+        self.assertEqual(p1.get_name() , "POLY1")
 
         p2 = coll2["POLY2"]
         tail  = p2[-1]
         self.assertEqual( tail , (20,120))
-        self.assertEqual(p2.getName() , "POLY2")
+        self.assertEqual(p2.get_name() , "POLY2")
         

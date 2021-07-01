@@ -48,5 +48,5 @@ class Deprecation_2_0_Test(EclTest):
 class Deprecation_1_9_Test(EclTest):
 
     def test_EclRegion_properties(self):
-        grid = EclGridGenerator.createRectangular( (10,10,10) , (1,1,1))
+        grid = EclGridGenerator.create_rectangular( (10,10,10) , (1,1,1))
         region = EclRegion( grid , False )

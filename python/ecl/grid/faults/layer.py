@@ -18,7 +18,6 @@ import ctypes
 
 from ecl.grid import EclGrid
 from cwrap import BaseCClass
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import IntVector
 from ecl import EclPrototype
 
@@ -56,16 +55,16 @@ class Layer(BaseCClass):
 
     @classmethod
     def copy(cls, src):
-        layer = Layer(src.getNX(), src.getNY())
+        layer = Layer(src.get_nx(), src.get_ny())
         layer._copy(layer, src)
         return layer
 
 
     def _assert_ij(self, i,j):
-        if i < 0 or i >= self.getNX():
+        if i < 0 or i >= self.get_nx():
             raise ValueError("Invalid layer i:%d" % i)
 
-        if j < 0 or j >= self.getNY():
+        if j < 0 or j >= self.get_ny():
             raise ValueError("Invalid layer j:%d" % j)
 
 
@@ -90,14 +89,14 @@ class Layer(BaseCClass):
 
 
     def update_active(self, grid, k):
-        if grid.getNX() != self.getNX():
-            raise ValueError("NX dimension mismatch. Grid:%d  layer:%d" % (grid.getNX(), self.getNX()))
+        if grid.get_nx() != self.get_nx():
+            raise ValueError("NX dimension mismatch. Grid:%d  layer:%d" % (grid.get_nx(), self.get_nx()))
 
-        if grid.getNY() != self.getNY():
-            raise ValueError("NY dimension mismatch. Grid:%d  layer:%d" % (grid.getNY(), self.getNY()))
+        if grid.get_ny() != self.get_ny():
+            raise ValueError("NY dimension mismatch. Grid:%d  layer:%d" % (grid.get_ny(), self.get_ny()))
 
-        if k >= grid.getNZ():
-            raise ValueError("K value invalid: Grid range [0,%d)" % grid.getNZ())
+        if k >= grid.get_nz():
+            raise ValueError("K value invalid: Grid range [0,%d)" % grid.get_nz())
 
         self._update_active(grid, k)
 
@@ -135,16 +134,16 @@ class Layer(BaseCClass):
         i1,j1 = p1
         i2,j2 = p2
 
-        if not 0 <= i1 < self.getNX():
+        if not 0 <= i1 < self.get_nx():
             raise IndexError("Invalid i1:%d" % i1)
 
-        if not 0 <= i2 < self.getNX():
+        if not 0 <= i2 < self.get_nx():
             raise IndexError("Invalid i2:%d" % i2)
 
-        if not 0 <= j1 < self.getNY():
+        if not 0 <= j1 < self.get_ny():
             raise IndexError("Invalid i1:%d" % j1)
 
-        if not 0 <= j2 < self.getNY():
+        if not 0 <= j2 < self.get_ny():
             raise IndexError("Invalid i2:%d" % j2)
 
         return self._cell_contact(i1, j1, i2, j2)
@@ -160,10 +159,10 @@ class Layer(BaseCClass):
                 x1,y1 = polyline[i]
                 x2,y2 = polyline[i + 1]
 
-                c1 = grid.findCellCornerXY(x1, y1, k)
-                c2 = grid.findCellCornerXY(x2, y2, k)
+                c1 = grid.find_cell_corner_xy(x1, y1, k)
+                c2 = grid.find_cell_corner_xy(x2, y2, k)
 
-                self.addInterpBarrier(c1, c2)
+                self.add_interp_barrier(c1, c2)
 
 
     def add_fault_barrier(self, fault, K, link_segments=True):
@@ -171,24 +170,24 @@ class Layer(BaseCClass):
         num_lines = len(fault_layer)
         for index, fault_line in enumerate(fault_layer):
             for segment in fault_line:
-                c1, c2 = segment.getCorners()
+                c1, c2 = segment.get_corners()
                 self._add_barrier(c1, c2)
 
             if index < num_lines - 1:
                 next_line = fault_layer[index + 1]
                 next_segment = next_line[0]
-                next_c1, next_c2 = next_segment.getCorners()
+                next_c1, next_c2 = next_segment.get_corners()
 
                 if link_segments:
-                    self.addInterpBarrier(c2, next_c1)
+                    self.add_interp_barrier(c2, next_c1)
 
 
     def add_ij_barrier(self, ij_list):
         if len(ij_list) < 2:
             raise ValueError("Must have at least two (i,j) points")
 
-        nx = self.getNX()
-        ny = self.getNY()
+        nx = self.get_nx()
+        ny = self.get_ny()
         p1 = ij_list[0]
         i1,j1 = p1
         for p2 in ij_list[1:]:
@@ -254,22 +253,3 @@ class Layer(BaseCClass):
 
     def count_equal(self, value):
         return self._count_equal(value)
-
-
-
-monkey_the_camel(Layer, 'activeCell', Layer.active_cell)
-monkey_the_camel(Layer, 'updateActive', Layer.update_active)
-monkey_the_camel(Layer, 'bottomBarrier', Layer.bottom_barrier)
-monkey_the_camel(Layer, 'leftBarrier', Layer.left_barrier)
-monkey_the_camel(Layer, 'getNX', Layer.get_nx)
-monkey_the_camel(Layer, 'getNY', Layer.get_ny)
-monkey_the_camel(Layer, 'cellContact', Layer.cell_contact)
-monkey_the_camel(Layer, 'addInterpBarrier', Layer.add_interp_barrier)
-monkey_the_camel(Layer, 'addPolylineBarrier', Layer.add_polyline_barrier)
-monkey_the_camel(Layer, 'addFaultBarrier', Layer.add_fault_barrier)
-monkey_the_camel(Layer, 'addIJBarrier', Layer.add_ij_barrier)
-monkey_the_camel(Layer, 'cellSum', Layer.cell_sum)
-monkey_the_camel(Layer, 'clearCells', Layer.clear_cells)
-monkey_the_camel(Layer, 'updateConnected', Layer.update_connected)
-monkey_the_camel(Layer, 'cellsEqual', Layer.cells_equal)
-monkey_the_camel(Layer, 'countEqual', Layer.count_equal)

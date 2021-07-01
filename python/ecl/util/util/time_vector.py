@@ -173,5 +173,5 @@ class TimeVector(VectorTemplate):
 
         return timeVector
 
-    def getDataPtr(self):
-        raise NotImplementedError("The getDataPtr() function is not implemented for time_t vectors")
+    def get_dataPtr(self):
+        raise NotImplementedError("The get_dataPtr() function is not implemented for time_t vectors")

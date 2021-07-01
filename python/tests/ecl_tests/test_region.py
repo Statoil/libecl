@@ -23,14 +23,14 @@ from tests import EclTest
 class RegionTest(EclTest):
 
     def test_equal(self):
-        grid = EclGrid.createRectangular( (10,10,1) , (1,1,1))
-        kw_int = EclKW( "INT" , grid.getGlobalSize( ) , EclDataType.ECL_INT )
-        kw_float = EclKW( "FLOAT" , grid.getGlobalSize( ) , EclDataType.ECL_FLOAT )
+        grid = EclGrid.create_rectangular( (10,10,1) , (1,1,1))
+        kw_int = EclKW( "INT" , grid.get_global_size( ) , EclDataType.ECL_INT )
+        kw_float = EclKW( "FLOAT" , grid.get_global_size( ) , EclDataType.ECL_FLOAT )
 
         kw_int[0:49] = 1
         region = EclRegion(grid, False)
         region.select_equal( kw_int , 1 )
-        glist = region.getGlobalList()
+        glist = region.get_global_list()
         for g in glist:
             self.assertEqual( kw_int[g] , 1 )
 
@@ -38,12 +38,12 @@ class RegionTest(EclTest):
             region.select_equal( kw_float , 1 )
 
     def test_sum(self):
-        grid = EclGrid.createRectangular( (10,10,1) , (1,1,1))
-        kw_mask = EclKW( "INT" , grid.getGlobalSize( ) , EclDataType.ECL_INT )
-        int_value =  EclKW( "INT" , grid.getGlobalSize( ) , EclDataType.ECL_INT )
-        float_value =  EclKW( "FLOAT" , grid.getGlobalSize( ) , EclDataType.ECL_FLOAT)
-        double_value =  EclKW( "DOUBLE" , grid.getGlobalSize( ) , EclDataType.ECL_DOUBLE )
-        bool_value =  EclKW( "BOOL" , grid.getGlobalSize( ) , EclDataType.ECL_BOOL )
+        grid = EclGrid.create_rectangular( (10,10,1) , (1,1,1))
+        kw_mask = EclKW( "INT" , grid.get_global_size( ) , EclDataType.ECL_INT )
+        int_value =  EclKW( "INT" , grid.get_global_size( ) , EclDataType.ECL_INT )
+        float_value =  EclKW( "FLOAT" , grid.get_global_size( ) , EclDataType.ECL_FLOAT)
+        double_value =  EclKW( "DOUBLE" , grid.get_global_size( ) , EclDataType.ECL_DOUBLE )
+        bool_value =  EclKW( "BOOL" , grid.get_global_size( ) , EclDataType.ECL_BOOL )
 
         kw_mask[0:50] = 1
 
@@ -66,7 +66,7 @@ class RegionTest(EclTest):
     def test_truth_and_size(self):
         actnum = IntVector( initial_size = 100, default_value = 0)
         actnum[0:50] = 1
-        grid = EclGrid.createRectangular( (10,10,1) , (1,1,1), actnum = actnum)
+        grid = EclGrid.create_rectangular( (10,10,1) , (1,1,1), actnum = actnum)
         region = EclRegion(grid, False)
 
         self.assertFalse( region )

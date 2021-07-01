@@ -69,8 +69,8 @@ class NPVTest(EclTest):
         self.assertIsNone( npv.getExpression() )
         npv.setExpression( "[FOPT]*$OIL_PRICE - [FGIT]*$GAS_PRICE")
         self.assertEqual( npv.getExpression() , "[FOPT]*$OIL_PRICE - [FGIT]*$GAS_PRICE")
-        self.assertIn( "FOPT" , npv.getKeyList() )
-        self.assertIn( "FGIT" , npv.getKeyList() )
+        self.assertIn( "FOPT" , npv.get_keyList() )
+        self.assertIn( "FGIT" , npv.get_keyList() )
 
         with self.assertRaises(ValueError):
             npv.parseExpression("[FOPT")
@@ -86,12 +86,12 @@ class NPVTest(EclTest):
             
         parsedExpression = npv.parseExpression("[FOPT]")
         self.assertEqual( parsedExpression , "FOPT[i]")
-        self.assertEqual( 1 , len(npv.getKeyList() ))
+        self.assertEqual( 1 , len(npv.get_keyList() ))
 
 
         parsedExpression = npv.parseExpression("[FOPT]*2 + [FGPT] - [WOPT:OP_1]")
         self.assertEqual( parsedExpression , "FOPT[i]*2 + FGPT[i] - WOPT_OP_1[i]")
-        keyList = npv.getKeyList()
+        keyList = npv.get_keyList()
         self.assertEqual( 3 , len(keyList))
         self.assertIn( "FOPT" , keyList )
         self.assertIn( "FGPT" , keyList )

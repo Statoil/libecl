@@ -17,7 +17,6 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
-from ecl.util.util import monkey_the_camel
 from .ecl_kw import EclKW
 
 class Ecl3DKW(EclKW):
@@ -46,10 +45,10 @@ class Ecl3DKW(EclKW):
        permx_kw = file["PORO"][0]
        porv_kw = file["PORV"][0]
 
-       permx_kw.setDefault( -1 )
-       for k in range(grid.getNZ()):
-           for j in range(grid.getNY()):
-               for i in range(grid.getNX()):
+       permx_kw.set_default( -1 )
+       for k in range(grid.nz)):
+           for j in range(grid.ny):
+               for i in range(grid.nx):
                    print('"(%d,%d,%d)  Permx:%g  Porv:%g"' % (i,j,k,permx_kw[i,j,k] , porv_kw[i,j,k]))
 
     In the example we open an ECLIPSE INIT file and extract the PERMX
@@ -61,7 +60,7 @@ class Ecl3DKW(EclKW):
     stored, this active/inactive gymnastics is handled
     transparently. With the call:
 
-        permx_kw.setDefault( -1 )
+        permx_kw.set_default( -1 )
 
     we say that we want the value -1 for all inactive cells in the
     PERMX property.
@@ -69,13 +68,13 @@ class Ecl3DKW(EclKW):
     """
     def __init__(self, kw , grid , value_type , default_value = 0 , global_active = False):
         if global_active:
-            size = grid.getGlobalSize()
+            size = grid.get_global_size()
         else:
-            size = grid.getNumActive( )
+            size = grid.get_num_active( )
         super(Ecl3DKW , self).__init__( kw , size , value_type)
         self.grid = grid
         self.global_active = global_active
-        self.setDefault( default_value )
+        self.set_default( default_value )
 
 
     @classmethod
@@ -107,7 +106,7 @@ class Ecl3DKW(EclKW):
         If the [i,j,k] input corresponds to an inactive cell in a
         keyword with only nactive elements the default value will be
         returned. By default the default value will be 0, but another
-        value can be assigned with the setDefault() method.
+        value can be assigned with the set_default() method.
         """
         if isinstance(index , tuple):
             global_index = self.grid.get_global_index( ijk = index )
@@ -115,7 +114,7 @@ class Ecl3DKW(EclKW):
                 index = global_index
             else:
                 if not self.grid.active( global_index = global_index):
-                    return self.getDefault()
+                    return self.get_default()
                 else:
                     index = self.grid.get_active_index( ijk = index )
 
@@ -177,9 +176,9 @@ class Ecl3DKW(EclKW):
 
         print('Porosity in cell (10,11,12):%g' % poro[10,11,12])
         """
-        if len(kw) == grid.getGlobalSize():
+        if len(kw) == grid.get_global_size():
             kw.global_active = True
-        elif len(kw) == grid.getNumActive():
+        elif len(kw) == grid.get_num_active():
             kw.global_active = False
         else:
             raise ValueError("Size mismatch - must have size matching global/active size of grid")
@@ -188,12 +187,12 @@ class Ecl3DKW(EclKW):
         kw.__class__ = cls
         kw.default_value = default_value
         kw.grid = grid
-        if len(kw) == grid.getGlobalSize():
+        if len(kw) == grid.get_global_size():
             kw.global_active = True
         else:
             kw.global_active = False
 
-        kw.setDefault( default_value )
+        kw.set_default( default_value )
         return kw
 
 
@@ -205,7 +204,7 @@ class Ecl3DKW(EclKW):
         main purpose of this is to facilitate iteration over the
         active index, and for writing binary files.
         """
-        return self.grid.compressedKWCopy( self )
+        return self.grid.compressed_kw_copy( self )
 
 
     def global_copy(self):
@@ -216,12 +215,12 @@ class Ecl3DKW(EclKW):
         main purpose of this is to facilitate iteration over the
         global index, and for writing binary files.
         """
-        return self.grid.globalKWCopy( self , self.getDefault() )
+        return self.grid.global_kw_copy( self , self.get_default() )
 
 
 
     def dims(self):
-        return (self.grid.getNX() , self.grid.getNY() , self.grid.getNZ())
+        return (self.grid.nx, self.grid.ny, self.grid.nz)
 
 
     def set_default(self, default_value):
@@ -230,10 +229,3 @@ class Ecl3DKW(EclKW):
 
     def get_default(self):
         return self.default_value
-
-
-monkey_the_camel(Ecl3DKW, 'castFromKW', Ecl3DKW.cast_from_kw, classmethod)
-monkey_the_camel(Ecl3DKW, 'compressedCopy', Ecl3DKW.compressed_copy)
-monkey_the_camel(Ecl3DKW, 'globalCopy', Ecl3DKW.global_copy)
-monkey_the_camel(Ecl3DKW, 'setDefault', Ecl3DKW.set_default)
-monkey_the_camel(Ecl3DKW, 'getDefault', Ecl3DKW.get_default)

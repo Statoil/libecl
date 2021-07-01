@@ -239,9 +239,9 @@ keywords :code:`SWAT`, :code:`SGAS` and :code:`SOIL`:
    # and check if they are in the file
    for kw in sys.argv[2:]:
        if kw in file:
-           print("Found %s in %s" % (kw , file.getFilename()))
+           print("Found %s in %s" % (kw , file.get_filename()))
        else:
-           print("Missing %s in %s" % (kw , file.getFilename()))
+           print("Missing %s in %s" % (kw , file.get_filename()))
 
 
 Special method __getitem__()
@@ -569,7 +569,7 @@ apply is:
 
    # Create a new satnum keyword and use the assign() method with a
    # mask parameter.
-   satnum = EclKW.create( "SATNUM" , grid.getGlobalSize() , EclTypeEnum.ECL_INT_TYPE)
+   satnum = EclKW.create( "SATNUM" , grid.get_global_size() , EclTypeEnum.ECL_INT_TYPE)
    satnum.assign( 1, mask = reg1 )
    satnum.assign( 2, mask = reg2 )
    satnum.assign( 3, mask = reg3 )

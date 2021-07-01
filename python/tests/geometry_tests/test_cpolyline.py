@@ -156,10 +156,10 @@ class CPolylineTest(EclTest):
         
     def test_name(self):
         p1 = CPolyline()
-        self.assertTrue( p1.getName() is None )
+        self.assertTrue( p1.get_name() is None )
 
         p2 = CPolyline( name = "Poly2" )
-        self.assertEqual( p2.getName() , "Poly2")
+        self.assertEqual( p2.get_name() , "Poly2")
         
 
     def test_unzip(self):

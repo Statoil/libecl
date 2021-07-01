@@ -52,9 +52,9 @@ class GridCoarceTest(EclTest):
         with TestAreaContext("python/grid-test/testCoarse"):
             grid = self.lgc_grid()
             kw = self.lgc_restart(grid)["SGAS"][0]
-            nx = grid.getNX()
-            ny = grid.getNY()
-            nz = grid.getNZ()
+            nx = grid.get_nx()
+            ny = grid.get_ny()
+            nz = grid.get_nz()
 
             # limit amount of points tested by
             # only testing every 3rd point
@@ -62,7 +62,7 @@ class GridCoarceTest(EclTest):
             y_space = range(0, ny, 3)
             z_space = range(0, nz, 3)
 
-            numpy_3d = grid.create3D(kw)
+            numpy_3d = grid.create_3d(kw)
             for k, j, i in itertools.product(z_space, y_space, x_space):
                 if grid.active(ijk=(i, j, k)):
                     self.assertAlmostEqual(

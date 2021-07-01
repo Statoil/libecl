@@ -135,5 +135,5 @@ class FortIOTest(EclTest):
             with cwrap.open("text_file" , "w") as f:
                 kw1.write_grdecl( f )
 
-            self.assertTrue( FortIO.isFortranFile( "fortran_file" ))
-            self.assertFalse( FortIO.isFortranFile( "text_file" ))
+            self.assertTrue( FortIO.is_fortran_file( "fortran_file" ))
+            self.assertFalse( FortIO.is_fortran_file( "text_file" ))

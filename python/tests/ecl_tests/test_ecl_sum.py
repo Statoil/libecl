@@ -114,7 +114,7 @@ class EclSumTest(EclTest):
 
             with openFortIO("ECLIPSE.SMSPEC", mode=FortIO.WRITE_MODE) as f:
                 for kw in kw_list:
-                    if kw.getName() == "KEYWORDS":
+                    if kw.get_name() == "KEYWORDS":
                         continue
                     kw.fwrite(f)
 
@@ -136,7 +136,7 @@ class EclSumTest(EclTest):
             with openFortIO("ECLIPSE.UNSMRY", mode=FortIO.WRITE_MODE) as f:
                 c = 0
                 for kw in kw_list:
-                    if kw.getName() == "PARAMS":
+                    if kw.get_name() == "PARAMS":
                         if c % 5 == 0:
                             continue
                     c += 1

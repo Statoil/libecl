@@ -220,7 +220,7 @@ class UtilTest(TestCase):
     def test_update_active_mask(self):
         vec = BoolVector(False, 10)
 
-        self.assertTrue(vec.updateActiveMask("1-2,5"))
+        self.assertTrue(vec.update_activeMask("1-2,5"))
         self.assertTrue(vec[1])
         self.assertTrue(vec[2])
         self.assertTrue(vec[5])
@@ -228,7 +228,7 @@ class UtilTest(TestCase):
 
         vec = BoolVector(False, 10)
 
-        self.assertTrue(vec.updateActiveMask("1-5,2,3"))
+        self.assertTrue(vec.update_activeMask("1-5,2,3"))
         self.assertTrue(vec[1])
         self.assertTrue(vec[2])
         self.assertTrue(vec[3])
@@ -239,7 +239,7 @@ class UtilTest(TestCase):
 
         vec = BoolVector(False, 10)
 
-        self.assertTrue(vec.updateActiveMask("5,6,7,15"))
+        self.assertTrue(vec.update_activeMask("5,6,7,15"))
         self.assertTrue(vec[5])
         self.assertTrue(vec[6])
         self.assertTrue(vec[7])
@@ -499,13 +499,13 @@ class UtilTest(TestCase):
         v[0] = 1
         v[10] = 1
         v[20] = 1
-        self.assertEqual(v.countEqual(1), 3)
+        self.assertEqual(v.count_equal(1), 3)
 
         v = DoubleVector(default_value=77)
         v[0] = 1
         v[10] = 1
         v[20] = 1
-        self.assertEqual(v.countEqual(1), 3)
+        self.assertEqual(v.count_equal(1), 3)
 
     def range_test(self, v, a, b, d):
         v.initRange(a, b, d)

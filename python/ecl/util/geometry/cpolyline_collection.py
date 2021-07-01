@@ -96,7 +96,7 @@ class CPolylineCollection(BaseCClass):
             if not name is None:
                 raise ValueError("The name keyword argument can only be supplied when add not CPOlyline object")
 
-        name = polyline.getName()
+        name = polyline.get_name()
         if name and name in self:
             raise KeyError("The polyline collection already has an object:%s" % name)
 

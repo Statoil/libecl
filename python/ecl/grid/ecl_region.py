@@ -31,7 +31,6 @@ import ctypes
 from cwrap import BaseCClass
 
 import ecl
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import IntVector
 
 from ecl import EclPrototype
@@ -431,7 +430,7 @@ class EclRegion(BaseCClass):
 
         """
         if not ecl_kw.data_type.is_int():
-            raise ValueError("The select_equal method must have an integer valued keyword - got:%s" % ecl_kw.typeName( ))
+            raise ValueError("The select_equal method must have an integer valued keyword - got:%s" % ecl_kw.type_name( ))
         self._select_equal( ecl_kw , value )
 
 
@@ -442,7 +441,7 @@ class EclRegion(BaseCClass):
         See select_equal() for further documentation.
         """
         if not ecl_kw.data_type.is_int():
-            raise ValueError("The select_equal method must have an integer valued keyword - got:%s" % ecl_kw.typeName( ))
+            raise ValueError("The select_equal method must have an integer valued keyword - got:%s" % ecl_kw.type_name( ))
         self._deselect_equal( ecl_kw , value )
 
     @select_method
@@ -843,14 +842,14 @@ class EclRegion(BaseCClass):
         exactly to nx,ny of the grid.
         """
         grid = self.grid
-        if k < 0 or k >= grid.getNZ():
-            raise ValueError("Invalid k value:%d - must be in range [0,%d)" % (k , grid.getNZ()))
+        if k < 0 or k >= grid.get_nz():
+            raise ValueError("Invalid k value:%d - must be in range [0,%d)" % (k , grid.get_nz()))
 
-        if grid.getNX() != layer.getNX():
-            raise ValueError("NX dimension mismatch. Grid:%d  layer:%d" % (grid.getNX() , layer.getNX()))
+        if grid.get_nx() != layer.get_nx():
+            raise ValueError("NX dimension mismatch. Grid:%d  layer:%d" % (grid.get_nx() , layer.get_nx()))
 
-        if grid.getNY() != layer.getNY():
-            raise ValueError("NY dimension mismatch. Grid:%d  layer:%d" % (grid.getNY() , layer.getNY()))
+        if grid.get_ny() != layer.get_ny():
+            raise ValueError("NY dimension mismatch. Grid:%d  layer:%d" % (grid.get_ny() , layer.get_ny()))
 
         self._select_from_layer( layer , k , value )
 
@@ -1014,7 +1013,7 @@ class EclRegion(BaseCClass):
         """
         WIll return a Python list of (ij,k) tuples for the region.
         """
-        global_list = self.getGlobalList()
+        global_list = self.get_global_list()
         ijk_list = []
         for g in global_list:
             ijk_list.append( self.grid.get_ijk( global_index = g ) )
@@ -1056,12 +1055,3 @@ class EclRegion(BaseCClass):
 
     def set_name(self , name):
         self._set_name( name )
-
-monkey_the_camel(EclRegion, 'selectTrue', EclRegion.select_true)
-monkey_the_camel(EclRegion, 'selectFalse', EclRegion.select_false)
-monkey_the_camel(EclRegion, 'selectFromLayer', EclRegion.select_from_layer)
-monkey_the_camel(EclRegion, 'getActiveList', EclRegion.get_active_list)
-monkey_the_camel(EclRegion, 'getGlobalList', EclRegion.get_global_list)
-monkey_the_camel(EclRegion, 'getIJKList', EclRegion.get_ijk_list)
-monkey_the_camel(EclRegion, 'getName', EclRegion.get_name)
-monkey_the_camel(EclRegion, 'setName', EclRegion.set_name)

@@ -53,9 +53,9 @@ class KWTest(EclTest):
         kw[1] = 5
         kw[2] = 0
 
-        self.assertEqual(10, kw.getMax())
-        self.assertEqual(0 , kw.getMin())
-        self.assertEqual((0,10) , kw.getMinMax())
+        self.assertEqual(10, kw.get_max())
+        self.assertEqual(0 , kw.get_min())
+        self.assertEqual((0,10) , kw.get_min_max())
 
 
     def test_deprecated_datatypes(self):
@@ -279,46 +279,46 @@ class KWTest(EclTest):
 
 
         with self.assertRaises(IndexError):
-            EclKW.firstDifferent(kw1, kw2, offset=100)
+            EclKW.first_different(kw1, kw2, offset=100)
 
         with self.assertRaises(ValueError):
-            EclKW.firstDifferent(kw1, kw3)
+            EclKW.first_different(kw1, kw3)
 
         with self.assertRaises(TypeError):
-            EclKW.firstDifferent(kw1, kw4)
+            EclKW.first_different(kw1, kw4)
 
 
         with self.assertRaises(IndexError):
-            kw1.firstDifferent(kw2, offset=100)
+            kw1.first_different(kw2, offset=100)
 
         with self.assertRaises(ValueError):
-            kw1.firstDifferent(kw3)
+            kw1.first_different(kw3)
 
         with self.assertRaises(TypeError):
-            kw1.firstDifferent(kw4)
+            kw1.first_different(kw4)
 
 
         kw1.assign(1)
         kw2.assign(1)
 
-        self.assertEqual(kw1.firstDifferent(kw2), len(kw1))
+        self.assertEqual(kw1.first_different(kw2), len(kw1))
 
         kw1[0] = 100
-        self.assertEqual(kw1.firstDifferent(kw2), 0)
-        self.assertEqual(kw1.firstDifferent(kw2, offset=1), len(kw1))
+        self.assertEqual(kw1.first_different(kw2), 0)
+        self.assertEqual(kw1.first_different(kw2, offset=1), len(kw1))
         kw1[10] = 100
-        self.assertEqual(kw1.firstDifferent(kw2, offset=1), 10)
+        self.assertEqual(kw1.first_different(kw2, offset=1), 10)
 
 
         kw4.assign(1.0)
         kw5.assign(1.0)
-        self.assertEqual(kw4.firstDifferent(kw5), len(kw4))
+        self.assertEqual(kw4.first_different(kw5), len(kw4))
 
         kw4[10] *= 1.0001
-        self.assertEqual(kw4.firstDifferent(kw5), 10)
+        self.assertEqual(kw4.first_different(kw5), 10)
 
-        self.assertEqual(kw4.firstDifferent(kw5, epsilon=1.0), len(kw4))
-        self.assertEqual(kw4.firstDifferent(kw5, epsilon=0.0000001), 10)
+        self.assertEqual(kw4.first_different(kw5, epsilon=1.0), len(kw4))
+        self.assertEqual(kw4.first_different(kw5, epsilon=0.0000001), 10)
 
 
     def test_numeric_equal(self):
@@ -362,8 +362,8 @@ class KWTest(EclTest):
     def test_numpy(self):
         kw1 = EclKW("DOUBLE", 10, EclDataType.ECL_DOUBLE)
 
-        view = kw1.numpyView()
-        copy = kw1.numpyCopy()
+        view = kw1.numpy_view()
+        copy = kw1.numpy_copy()
 
         self.assertTrue(copy[ 0 ] == kw1[ 0 ])
         self.assertTrue(view[ 0 ] == kw1[ 0 ])
@@ -378,7 +378,7 @@ class KWTest(EclTest):
                 EclDataType.ECL_STRING(19)]:
             kw2 = EclKW("TEST_KW", 10, ecl_type)
             with self.assertRaises(ValueError):
-                kw2.numpyView()
+                kw2.numpy_view()
 
     def test_slice(self):
         N = 100
@@ -417,7 +417,7 @@ class KWTest(EclTest):
     def test_typename(self):
         kw = EclKW("KW", 100, EclDataType.ECL_INT)
 
-        self.assertEqual(kw.typeName(), "INTE")
+        self.assertEqual(kw.type_name(), "INTE")
 
     def test_string_alloc(self):
         kw = EclKW("KW", 10, EclDataType.ECL_STRING(30))

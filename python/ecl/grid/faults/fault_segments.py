@@ -16,8 +16,6 @@
 
 from __future__ import print_function
 
-from ecl.util.util import monkey_the_camel
-
 
 class FaultSegment(object):
 
@@ -100,7 +98,7 @@ class SegmentMap(object):
 
 
     def add_segment(self, segment):
-        (C1,C2) = segment.getCorners()
+        (C1,C2) = segment.get_corners()
         if C1 not in self.__segment_map:
             self.__segment_map[C1] = {}
             self.__count_map[C1] = 0
@@ -119,7 +117,7 @@ class SegmentMap(object):
 
 
     def del_segment(self, segment):
-        (C1,C2) = segment.getCorners()
+        (C1,C2) = segment.get_corners()
         self.__count_map[C1] -= 1
         self.__count_map[C2] -= 1
         del self.__segment_map[C1][C2]
@@ -139,11 +137,11 @@ class SegmentMap(object):
                 end_segments.append(list(self.__segment_map[C].values())[0])
 
         start_segment = end_segments[0]
-        self.delSegment(start_segment)
+        self.del_segment(start_segment)
         return start_segment
 
     def pop_next(self, segment):
-        (C1,C2) = segment.getCorners()
+        (C1,C2) = segment.get_corners()
         if self.__count_map[C1] >= 1:
             next_segment = list(self.__segment_map[C1].values())[0]
         elif self.__count_map[C2] >= 1:
@@ -152,7 +150,7 @@ class SegmentMap(object):
             next_segment = None
 
         if next_segment:
-            self.delSegment(next_segment)
+            self.del_segment(next_segment)
         return next_segment
 
 
@@ -160,15 +158,3 @@ class SegmentMap(object):
         for d in self.__segment_map.values():
             for (C,S) in d.iteritems():
                 print(S)
-
-
-
-monkey_the_camel(FaultSegment, 'getCorners', FaultSegment.get_corners)
-monkey_the_camel(FaultSegment, 'getC1', FaultSegment.get_c1)
-monkey_the_camel(FaultSegment, 'getC2', FaultSegment.get_c2)
-
-monkey_the_camel(SegmentMap, 'addSegment', SegmentMap.add_segment)
-monkey_the_camel(SegmentMap, 'delSegment', SegmentMap.del_segment)
-monkey_the_camel(SegmentMap, 'popStart', SegmentMap.pop_start)
-monkey_the_camel(SegmentMap, 'popNext', SegmentMap.pop_next)
-monkey_the_camel(SegmentMap, 'printContent', SegmentMap.print_content)

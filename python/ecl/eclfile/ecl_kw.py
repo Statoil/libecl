@@ -47,7 +47,6 @@ import numpy
 from cwrap import CFILE, BaseCClass
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl import EclDataType
 from ecl import EclTypeEnum, EclUtil
 
@@ -351,10 +350,10 @@ class EclKW(BaseCClass):
 
     def __repr__(self):
         si = len(self)
-        nm = self.getName()
+        nm = self.get_name()
         mm = 'type=%s' % str(self.data_type)
-        if self.isNumeric():
-            mi, ma = self.getMinMax()
+        if self.is_numeric():
+            mi, ma = self.get_min_max()
             mm = 'min=%.2f, max=%.2f' % (mi,ma)
         ad = self._ad_str()
         fmt = 'EclKW(size=%d, name="%s", %s) %s'
@@ -458,7 +457,7 @@ class EclKW(BaseCClass):
         """
         Returns the number of elements. Implements len()
         """
-        return self._get_size()
+        return self._get_size() if self else 0
 
 
     def __deep_copy__(self, memo):
@@ -537,7 +536,7 @@ class EclKW(BaseCClass):
 
 
     def __IMUL__(self, factor, mul=True):
-        if self.isNumeric():
+        if self.is_numeric():
             if hasattr(factor, "ecl_kw_instance"):
                 if self.assert_binary(factor):
                     if mul:
@@ -567,7 +566,7 @@ class EclKW(BaseCClass):
 
 
     def __IADD__(self, delta, add=True):
-        if self.isNumeric():
+        if self.is_numeric():
             if type(self) == type(delta):
                 if self.assert_binary(delta):
                     if add:
@@ -613,7 +612,7 @@ class EclKW(BaseCClass):
     #################################################################
 
     def __abs__(self):
-        if self.isNumeric():
+        if self.is_numeric():
             copy = self.copy()
             copy._iabs()
             return copy
@@ -690,7 +689,7 @@ class EclKW(BaseCClass):
                         sum += 1
                 return sum
             else:
-                raise ValueError('The keyword "%s" is of string type - sum is not implemented' % self.getName())
+                raise ValueError('The keyword "%s" is of string type - sum is not implemented' % self.get_name())
 
         return mask.sum_kw(self, force_active)
 
@@ -743,7 +742,7 @@ class EclKW(BaseCClass):
         keyword has nx*ny*nz elements; if the keyword has nactive
         elements the @force_active flag is not considered.
         """
-        if self.isNumeric():
+        if self.is_numeric():
             if type(value) == type(self):
                 if mask is not None:
                     mask.copy_kw(self, value, force_active)
@@ -958,12 +957,12 @@ class EclKW(BaseCClass):
 
 
     def get_max(self):
-        mm = self.getMinMax()
+        mm = self.get_min_max()
         return mm[1]
 
 
     def get_min(self):
-        mm = self.getMinMax()
+        mm = self.get_min_max()
         return mm[0]
 
     @property
@@ -995,7 +994,7 @@ class EclKW(BaseCClass):
 
     @property
     def header(self):
-        return (self.getName(), len(self), self.typeName())
+        return (self.get_name(), len(self), self.type_name())
 
     @property
     def array(self):
@@ -1039,7 +1038,7 @@ class EclKW(BaseCClass):
         the elements. The implementation of the builtin method
         __str__() is based on this method.
         """
-        s = "%-8s %8d %-4s\n" % (self.getName(), len(self), self.typeName())
+        s = "%-8s %8d %-4s\n" % (self.get_name(), len(self), self.type_name())
         lines = len(self) // width
         if not fmt:
             fmt = self.str_fmt + " "
@@ -1088,10 +1087,10 @@ class EclKW(BaseCClass):
         The numpy array has a separate copy of the data, so that
         changes to either the numpy array or the EclKW will *not* be
         reflected in the other datastructure. This is in contrast to
-        the EclKW.numpyView() method where the underlying data is
+        the EclKW.numpy_view() method where the underlying data is
         shared.
         """
-        view = self.numpyView()
+        view = self.numpy_view()
         return numpy.copy(view)
 
     def fwrite(self, fortio):
@@ -1169,9 +1168,9 @@ class EclKW(BaseCClass):
         """
         Special case function for region code.
         """
-        dims = grid.getDims()
+        dims = grid.get_dims()
         actnum = grid.exportACTNUM()
-        self._fix_uninitialized(dims[0], dims[1], dims[2], actnum.getDataPtr())
+        self._fix_uninitialized(dims[0], dims[1], dims[2], actnum.get_dataPtr())
 
 
     def get_data_ptr(self):
@@ -1226,22 +1225,3 @@ class EclKW(BaseCClass):
         ok = self._safe_div( divisor )
         if not ok:
             raise NotImplementedError("safe_div not implemented for this type combination")
-
-
-
-
-monkey_the_camel(EclKW, 'intKeywords', EclKW.int_keywords, classmethod)
-monkey_the_camel(EclKW, 'isNumeric', EclKW.is_numeric)
-monkey_the_camel(EclKW, 'fortIOSize', EclKW.fort_io_size)
-monkey_the_camel(EclKW, 'setName', EclKW.set_name)
-monkey_the_camel(EclKW, 'getName', EclKW.get_name)
-monkey_the_camel(EclKW, 'getMinMax', EclKW.get_min_max)
-monkey_the_camel(EclKW, 'getMax', EclKW.get_max)
-monkey_the_camel(EclKW, 'getMin', EclKW.get_min)
-monkey_the_camel(EclKW, 'typeName', EclKW.type_name)
-monkey_the_camel(EclKW, 'getEclType', EclKW.get_ecl_type)
-monkey_the_camel(EclKW, 'numpyView', EclKW.numpy_view)
-monkey_the_camel(EclKW, 'numpyCopy', EclKW.numpy_copy)
-monkey_the_camel(EclKW, 'fixUninitialized', EclKW.fix_uninitialized)
-monkey_the_camel(EclKW, 'getDataPtr', EclKW.get_data_ptr)
-monkey_the_camel(EclKW, 'firstDifferent', EclKW.first_different)

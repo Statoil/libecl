@@ -56,35 +56,35 @@ class GridTest(EclTest):
 
     def test_corner(self):
         grid = EclGrid(self.egrid_file())
-        nx = grid.getNX()
-        ny = grid.getNY()
-        nz = grid.getNZ()
+        nx = grid.get_nx()
+        ny = grid.get_ny()
+        nz = grid.get_nz()
 
-        (x1,y1,z1) = grid.getCellCorner( 0 , ijk = (0,0,0))
+        (x1,y1,z1) = grid.get_cell_corner( 0 , ijk = (0,0,0))
         (x2,y2,z2) = grid.getLayerXYZ( 0 , 0 )
         self.assertEqual(x1,x2)
         self.assertEqual(y1,y2)
         self.assertEqual(z1,z2)
 
-        (x1,y1,z1) = grid.getCellCorner( 0 , ijk = (0,1,0))
+        (x1,y1,z1) = grid.get_cell_corner( 0 , ijk = (0,1,0))
         (x2,y2,z2) = grid.getLayerXYZ( (nx + 1) , 0 )
         self.assertEqual(x1,x2)
         self.assertEqual(y1,y2)
         self.assertEqual(z1,z2)
 
-        (x1,y1,z1) = grid.getCellCorner( 1 , ijk = (nx - 1,0,0))
+        (x1,y1,z1) = grid.get_cell_corner( 1 , ijk = (nx - 1,0,0))
         (x2,y2,z2) = grid.getLayerXYZ( nx , 0 )
         self.assertEqual(x1,x2)
         self.assertEqual(y1,y2)
         self.assertEqual(z1,z2)
 
-        (x1,y1,z1) = grid.getCellCorner( 4 , ijk = (0,0,nz-1))
+        (x1,y1,z1) = grid.get_cell_corner( 4 , ijk = (0,0,nz-1))
         (x2,y2,z2) = grid.getLayerXYZ( 0 , nz )
         self.assertEqual(x1,x2)
         self.assertEqual(y1,y2)
         self.assertEqual(z1,z2)
 
-        (x1,y1,z1) = grid.getCellCorner( 7 , ijk = (nx-1,ny-1,nz-1))
+        (x1,y1,z1) = grid.get_cell_corner( 7 , ijk = (nx-1,ny-1,nz-1))
         (x2,y2,z2) = grid.getLayerXYZ( (nx + 1)*(ny + 1) - 1 , nz )
         self.assertEqual(x1,x2)
         self.assertEqual(y1,y2)
@@ -114,10 +114,10 @@ class GridTest(EclTest):
     def test_EGRID( self ):
         grid = EclGrid(self.egrid_file())
         self.assertTrue(grid)
-        dims = grid.getDims()
-        self.assertEqual(dims[0] , grid.getNX())
-        self.assertEqual(dims[1] , grid.getNY())
-        self.assertEqual(dims[2] , grid.getNZ())
+        dims = grid.get_dims()
+        self.assertEqual(dims[0] , grid.get_nx())
+        self.assertEqual(dims[1] , grid.get_ny())
+        self.assertEqual(dims[2] , grid.get_nz())
 
 
 
@@ -141,7 +141,7 @@ class GridTest(EclTest):
             a1 = 1.0
             a2 = 2.0
             a3 = 3.0
-            grid = EclGrid.createRectangular((9, 9, 9), (a1, a2, a3))
+            grid = EclGrid.create_rectangular((9, 9, 9), (a1, a2, a3))
             grid.save_EGRID("rect.EGRID")
             grid2 = EclGrid("rect.EGRID")
             self.assertTrue(grid)
@@ -185,8 +185,8 @@ class GridTest(EclTest):
 
             actnum = IntVector(default_value = 1 , initial_size = 1000)
             actnum[0] = 0
-            g1 = EclGrid.createRectangular((10,10,10) , (1,1,1) , actnum = actnum )
-            self.assertEqual( g1.getNumActive() , actnum.elementSum() )
+            g1 = EclGrid.create_rectangular((10,10,10) , (1,1,1) , actnum = actnum )
+            self.assertEqual( g1.get_num_active() , actnum.elementSum() )
             g1.save_EGRID("G.EGRID")
 
             with open("grid.grdecl" , "w") as f2:
@@ -248,7 +248,7 @@ class GridTest(EclTest):
             g = EclGrid("/does/not/exist.EGRID")
 
     def test_boundingBox(self):
-        grid = EclGrid.createRectangular((10,10,10) , (1,1,1))
+        grid = EclGrid.create_rectangular((10,10,10) , (1,1,1))
         with self.assertRaises(ValueError):
             bbox = grid.getBoundingBox2D(layer = -1 )
 
@@ -286,8 +286,8 @@ class GridTest(EclTest):
 
         grid1 = EclGrid(case)
         grid2 = EclGrid(case)
-        self.assertEqual(grid1.getNumActive(), grid2.getNumActive())
-        self.assertEqual(grid1.getNumActive(), 34770)
+        self.assertEqual(grid1.get_num_active(), grid2.get_num_active())
+        self.assertEqual(grid1.get_num_active(), 34770)
 
 
     def test_no_mapaxes_check_for_nan(self):
@@ -317,12 +317,12 @@ class GridTest(EclTest):
     def test_volume_kw(self):
         grid = EclGrid(self.egrid_file())
         vol = grid.createVolumeKeyword( )
-        self.assertEqual( len(vol) , grid.getNumActive())
+        self.assertEqual( len(vol) , grid.get_num_active())
         for active_index , volume in enumerate(vol):
             self.assertEqual( volume , grid.cell_volume( active_index = active_index ))
 
         vol = grid.createVolumeKeyword( active_size = False )
-        self.assertEqual( len(vol) , grid.getGlobalSize())
+        self.assertEqual( len(vol) , grid.get_global_size())
         for global_index , volume in enumerate(vol):
             self.assertEqual( volume , grid.cell_volume( global_index = global_index ))
 

@@ -11,7 +11,7 @@ class WellTimeLine(BaseCClass):
     def __init__(self):
         raise NotImplementedError("Class can not be instantiated directly")
 
-    def getName(self):
+    def get_name(self):
         return self._name()
 
     def __len__(self):
@@ -37,7 +37,7 @@ class WellTimeLine(BaseCClass):
         pass
 
     def __repr__(self):
-        n = self.getName()
+        n = self.get_name()
         l = len(self)
         cnt = 'name = %s, size = %d' % (n,l)
         return self._create_repr(cnt)

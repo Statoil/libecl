@@ -22,7 +22,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from cwrap import BaseCClass
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import CTime
 from ecl.rft import EclRFTCell, EclPLTCell
 
@@ -79,7 +78,7 @@ class EclRFT(BaseCClass):
     def __repr__(self):
         rs = []
         rs.append('completed_cells = %d' % len(self))
-        rs.append('date = %s' % self.getDate())
+        rs.append('date = %s' % self.get_date())
         if self.is_RFT():
             rs.append('RFT')
         if self.is_PLT():
@@ -278,7 +277,7 @@ class EclRFTFile(BaseCClass):
         header_list = []
         for i in (range(self._get_size( None , CTime(-1)))):
             rft = self.iget( i )
-            header_list.append( (rft.getWellName() , rft.getDate()) )
+            header_list.append( (rft.getWellName() , rft.get_date()) )
         return header_list
 
 
@@ -308,10 +307,3 @@ class EclRFTFile(BaseCClass):
     def __repr__(self):
         w = len(self)
         return self._create_repr('wells = %d' % w)
-
-
-monkey_the_camel(EclRFT, 'getWellName', EclRFT.get_well_name)
-monkey_the_camel(EclRFT, 'getDate', EclRFT.get_date)
-
-monkey_the_camel(EclRFTFile, 'getNumWells', EclRFTFile.get_num_wells)
-monkey_the_camel(EclRFTFile, 'getHeaders', EclRFTFile.get_headers)

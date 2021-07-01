@@ -114,21 +114,21 @@ class GridGeneratorTest(EclTest):
                                  decomposition_change=True)
 
     def assertSubgrid(self, grid, subgrid, ijk_bound):
-        sijk_space = prod(*[range(d) for d in subgrid.getDims()[:-1:]])
+        sijk_space = prod(*[range(d) for d in subgrid.get_dims()[:-1:]])
         for sijk in sijk_space:
             gijk = tuple([a + b for a, b in
                          zip(sijk, list(zip(*ijk_bound))[0])])
 
             self.assertEqual(
-                [subgrid.getCellCorner(i, ijk=sijk) for i in range(8)],
-                [grid.getCellCorner(i, ijk=gijk) for i in range(8)]
+                [subgrid.get_cell_corner(i, ijk=sijk) for i in range(8)],
+                [grid.get_cell_corner(i, ijk=gijk) for i in range(8)]
                 )
 
             self.assertEqual(grid.active(ijk=gijk), subgrid.active(ijk=sijk))
 
     def test_validate_cells(self):
         for coord, zcorn, grid in self.test_base:
-            grid_dims = grid.getDims()[:-1:]
+            grid_dims = grid.get_dims()[:-1:]
             ijk_bounds = generate_ijk_bounds(grid_dims)
             for ijk_bound in ijk_bounds:
                 if not decomposition_preserving(ijk_bound):
@@ -143,7 +143,7 @@ class GridGeneratorTest(EclTest):
                                                     )
 
                 subgrid = EclGrid.create(sub_dims, sub_zcorn, sub_coord, None)
-                self.assertEqual(sub_dims, subgrid.getDims()[:-1:])
+                self.assertEqual(sub_dims, subgrid.get_dims()[:-1:])
                 self.assertSubgrid(grid, subgrid, ijk_bound)
 
     def test_actnum_extraction(self):
@@ -176,7 +176,7 @@ class GridGeneratorTest(EclTest):
             sub_coord, sub_zcorn, sub_actnum = sub
             sub_dims = tuple([u-l+1 for l, u in ijk_bound])
             subgrid = EclGrid.create(sub_dims, sub_zcorn, sub_coord, sub_actnum)
-            self.assertEqual(sub_dims, subgrid.getDims()[:-1:])
+            self.assertEqual(sub_dims, subgrid.get_dims()[:-1:])
             self.assertSubgrid(grid, subgrid, ijk_bound)
 
     def test_translation(self):
@@ -197,20 +197,20 @@ class GridGeneratorTest(EclTest):
                                                        )
 
         tgrid = EclGrid.create(dims, sub_zcorn, sub_coord, None)
-        self.assertEqual(grid.getGlobalSize(), tgrid.getGlobalSize())
+        self.assertEqual(grid.get_global_size(), tgrid.get_global_size())
 
-        for gi in range(grid.getGlobalSize()):
+        for gi in range(grid.get_global_size()):
             translation = numpy.array(translation)
-            corners = [grid.getCellCorner(i, gi) for i in range(8)]
+            corners = [grid.get_cell_corner(i, gi) for i in range(8)]
             corners = [tuple(numpy.array(c)+translation) for c in corners]
 
-            tcorners = [tgrid.getCellCorner(i, gi) for i in range(8)]
+            tcorners = [tgrid.get_cell_corner(i, gi) for i in range(8)]
 
             self.assertEqual(corners, tcorners)
 
     def test_subgrid_extration(self):
         for _, _, grid in self.test_base[:-1:]:
-            grid_dims = grid.getDims()[:-1:]
+            grid_dims = grid.get_dims()[:-1:]
             ijk_bounds = generate_ijk_bounds(grid_dims)
             for ijk_bound in ijk_bounds:
                 if not decomposition_preserving(ijk_bound):
@@ -219,7 +219,7 @@ class GridGeneratorTest(EclTest):
                 sub_dims = tuple([u-l+1 for l, u in ijk_bound])
                 subgrid = GridGen.extract_subgrid(grid, ijk_bound)
 
-                self.assertEqual(sub_dims, subgrid.getDims()[:-1:])
+                self.assertEqual(sub_dims, subgrid.get_dims()[:-1:])
                 self.assertSubgrid(grid, subgrid, ijk_bound)
 
     def test_subgrid_translation(self):
@@ -233,7 +233,7 @@ class GridGeneratorTest(EclTest):
             mapaxes[i] = val
 
         grid = EclGrid.create(
-                grid.getDims(),
+                grid.get_dims(),
                 grid.export_zcorn(),
                 grid.export_coord(),
                 None,
@@ -251,17 +251,17 @@ class GridGeneratorTest(EclTest):
                                         translation=translation
                                         )
 
-            self.assertEqual(grid.getDims(), subgrid.getDims())
+            self.assertEqual(grid.get_dims(), subgrid.get_dims())
 
             translation = numpy.array(translation)
-            for gindex in range(grid.getGlobalSize()):
+            for gindex in range(grid.get_global_size()):
                 grid_corners = [
-                                grid.getCellCorner(i, global_index=gindex)
+                                grid.get_cell_corner(i, global_index=gindex)
                                 for i in range(8)
                               ]
 
                 subgrid_corners = [
-                                subgrid.getCellCorner(i, global_index=gindex)
+                                subgrid.get_cell_corner(i, global_index=gindex)
                                 for i in range(8)
                                 ]
 

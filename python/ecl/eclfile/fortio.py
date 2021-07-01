@@ -40,7 +40,6 @@ import ctypes
 import os
 
 from cwrap import BaseCClass
-from ecl.util.util import monkey_the_camel
 from ecl import EclPrototype
 
 
@@ -206,6 +205,3 @@ def openFortIO(file_name, mode=FortIO.READ_MODE, fmt_file=False, endian_flip_hea
     """
     return FortIOContextManager(FortIO(file_name, mode=mode, fmt_file=fmt_file,
                                        endian_flip_header=endian_flip_header))
-
-monkey_the_camel(FortIO, 'getPosition', FortIO.get_position)
-monkey_the_camel(FortIO, 'isFortranFile', FortIO.is_fortran_file, classmethod)

@@ -24,7 +24,6 @@ ecl_grav.c implementation in the libecl library.
 from cwrap import BaseCClass
 
 from ecl import EclPrototype
-from ecl.util.util import monkey_the_camel
 from ecl import EclPhaseEnum
 import ecl.eclfile
 
@@ -92,8 +91,8 @@ class EclGrav(BaseCClass):
            ...
            date = datetime.datetime(year, month, day)
            rst_file = EclRestartFile("ECLIPSE.UNRST")
-           restart_view1 = rst_file.restartView(sim_time=date)
-           restart_view2 = rst_file.restartView(report_step=67)
+           restart_view1 = rst_file.restart_view(sim_time=date)
+           restart_view2 = rst_file.restart_view(report_step=67)
 
         The pore volume of each cell will be calculated based on the
         RPORV keyword from the restart files. The methods
@@ -216,5 +215,3 @@ class EclGrav(BaseCClass):
 
     def free(self):
         self._free()
-
-monkey_the_camel(EclGrav, 'addSurvey', EclGrav.add_survey)

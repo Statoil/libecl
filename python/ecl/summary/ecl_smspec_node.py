@@ -15,7 +15,6 @@
 #  for more details.
 
 from cwrap import BaseCClass
-from ecl.util.util import monkey_the_camel
 from ecl import EclPrototype
 
 
@@ -135,10 +134,10 @@ class EclSMSPECNode(BaseCClass):
         nodes which involve (i,j,k) coordinates will contain two
         forms:
 
-            getKey1()  =>  "BPR:10,11,6"
-            getKey2()  =>  "BPR:52423"
+            get_key1()  =>  "BPR:10,11,6"
+            get_key2()  =>  "BPR:52423"
 
-        Where the '52423' in getKey2() corresponds to i + j*nx +
+        Where the '52423' in get_key2() corresponds to i + j*nx +
         k*nx*ny.
         """
         return self._gen_key2( )
@@ -199,12 +198,3 @@ class EclSMSPECNode(BaseCClass):
         ending with 'H' are considered historical.
         """
         return self._node_is_historical( )
-
-
-monkey_the_camel(EclSMSPECNode, 'getKey1', EclSMSPECNode.get_key1)
-monkey_the_camel(EclSMSPECNode, 'getKey2', EclSMSPECNode.get_key2)
-monkey_the_camel(EclSMSPECNode, 'varType', EclSMSPECNode.var_type)
-monkey_the_camel(EclSMSPECNode, 'getNum', EclSMSPECNode.get_num)
-monkey_the_camel(EclSMSPECNode, 'isRate', EclSMSPECNode.is_rate)
-monkey_the_camel(EclSMSPECNode, 'isTotal', EclSMSPECNode.is_total)
-monkey_the_camel(EclSMSPECNode, 'isHistorical', EclSMSPECNode.is_historical)

@@ -418,7 +418,7 @@ class SumTest(EclTest):
         writer.addVariable( "FOPT" )
         self.assertTrue( writer.has_key( "FOPT" ))
 
-        writer.addTStep( 1 , 100 )
+        writer.add_t_step( 1 , 100 )
 
 
     def test_aquifer(self):

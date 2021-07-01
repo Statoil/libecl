@@ -181,7 +181,7 @@ class EclWellTest(EclTest):
         # testing name and repr
         info = self.getWellInfo()
         wtl  = info['G6HT2']
-        self.assertEqual('G6HT2', wtl.getName())
+        self.assertEqual('G6HT2', wtl.get_name())
         rep = repr(wtl)
         print(rep)
         pfx = 'WellTimeLine('

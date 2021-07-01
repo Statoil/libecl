@@ -59,7 +59,7 @@ class CPolyline(BaseCClass):
         return polyline
 
     def __str__(self):
-        name = self.getName()
+        name = self.get_name()
         if name:
             str = "%s [" % name
         else:
@@ -155,8 +155,8 @@ class CPolyline(BaseCClass):
         intersections = GeometryTools.rayPolygonIntersections( p1 , ray_dir , bbox)
         if intersections:
             p2 = intersections[0][1]
-            if self.getName():
-                name = "Extend:%s" % self.getName()
+            if self.get_name():
+                name = "Extend:%s" % self.get_name()
             else:
                 name = None
 
@@ -172,7 +172,7 @@ class CPolyline(BaseCClass):
             self._add_point(xc, yc)
 
 
-    def getName(self):
+    def get_name(self):
         return self._get_name( )
 
 

@@ -59,7 +59,7 @@ class KWTest(EclTest):
         self.assertTrue(swat.equal(swat2))
 
         swat3 = swat.sub_copy(20000, 100, new_header="swat")
-        self.assertTrue(swat3.getName() == "swat")
+        self.assertTrue(swat3.get_name() == "swat")
         self.assertTrue(len(swat3) == 100)
         equal = True
         for i in range(len(swat3)):

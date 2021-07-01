@@ -128,16 +128,16 @@ class SumTest(EclTest):
 
     def test_identify_var_type(self):
         self.assertEnumIsFullyDefined( EclSumVarType , "ecl_smspec_var_type" , "lib/include/ert/ecl/smspec_node.h")
-        self.assertEqual( EclSum.varType( "WWCT:OP_X") , EclSumVarType.ECL_SMSPEC_WELL_VAR )
-        self.assertEqual( EclSum.varType( "RPR") , EclSumVarType.ECL_SMSPEC_REGION_VAR )
-        self.assertEqual( EclSum.varType( "WNEWTON") , EclSumVarType.ECL_SMSPEC_MISC_VAR )
-        self.assertEqual( EclSum.varType( "AARQ:4") , EclSumVarType.ECL_SMSPEC_AQUIFER_VAR )
+        self.assertEqual( EclSum.var_type( "WWCT:OP_X") , EclSumVarType.ECL_SMSPEC_WELL_VAR )
+        self.assertEqual( EclSum.var_type( "RPR") , EclSumVarType.ECL_SMSPEC_REGION_VAR )
+        self.assertEqual( EclSum.var_type( "WNEWTON") , EclSumVarType.ECL_SMSPEC_MISC_VAR )
+        self.assertEqual( EclSum.var_type( "AARQ:4") , EclSumVarType.ECL_SMSPEC_AQUIFER_VAR )
 
-        self.assertEqual( EclSum.varType("RXFT"),  EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
-        self.assertEqual( EclSum.varType("RxxFT"), EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
-        self.assertEqual( EclSum.varType("RXFR"),  EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
-        self.assertEqual( EclSum.varType("RxxFR"), EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
-        self.assertEqual( EclSum.varType("RORFR"), EclSumVarType.ECL_SMSPEC_REGION_VAR)
+        self.assertEqual( EclSum.var_type("RXFT"),  EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
+        self.assertEqual( EclSum.var_type("RxxFT"), EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
+        self.assertEqual( EclSum.var_type("RXFR"),  EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
+        self.assertEqual( EclSum.var_type("RxxFR"), EclSumVarType.ECL_SMSPEC_REGION_2_REGION_VAR)
+        self.assertEqual( EclSum.var_type("RORFR"), EclSumVarType.ECL_SMSPEC_REGION_VAR)
 
         case = createEclSum("CSV" , [("FOPT", None , 0, "SM3") ,
                                      ("FOPR" , None , 0, "SM3/DAY"),
@@ -145,17 +145,17 @@ class SumTest(EclTest):
                                      ("RGPT" , None  ,1, "SM3")])
 
         node1 = case.smspec_node( "FOPT" )
-        self.assertEqual( node1.varType( ) , EclSumVarType.ECL_SMSPEC_FIELD_VAR )
+        self.assertEqual( node1.var_type( ) , EclSumVarType.ECL_SMSPEC_FIELD_VAR )
         self.assertIsNone(node1.wgname)
 
         node2 = case.smspec_node( "AARQ:10" )
-        self.assertEqual( node2.varType( ) , EclSumVarType.ECL_SMSPEC_AQUIFER_VAR )
-        self.assertEqual( node2.getNum( ) , 10 )
+        self.assertEqual( node2.var_type( ) , EclSumVarType.ECL_SMSPEC_AQUIFER_VAR )
+        self.assertEqual( node2.get_num( ) , 10 )
 
         node3 = case.smspec_node("RGPT:1")
-        self.assertEqual( node3.varType( ) , EclSumVarType.ECL_SMSPEC_REGION_VAR )
-        self.assertEqual( node3.getNum( ) , 1 )
-        self.assertTrue( node3.isTotal( ))
+        self.assertEqual( node3.var_type( ) , EclSumVarType.ECL_SMSPEC_REGION_VAR )
+        self.assertEqual( node3.get_num( ) , 1 )
+        self.assertTrue( node3.is_total( ))
 
         self.assertLess( node1, node3 )
         self.assertGreater( node2, node3 )
@@ -169,7 +169,7 @@ class SumTest(EclTest):
         case = createEclSum("CSV" , [("FOPT", None , 0, "SM3") , ("FOPR" , None , 0, "SM3/DAY")])
         sep = ";"
         with TestAreaContext("ecl/csv"):
-            case.exportCSV( "file.csv" , sep = sep)
+            case.export_csv( "file.csv" , sep = sep)
             self.assertTrue( os.path.isfile( "file.csv" ) )
             input_file = csv.DictReader( open("file.csv") , delimiter = sep )
             for row in input_file:
@@ -183,7 +183,7 @@ class SumTest(EclTest):
             self.assertEqual(case.unit("FOPT"), "SM3")
 
         with TestAreaContext("ecl/csv"):
-            case.exportCSV( "file.csv" , keys = ["FOPT"] , sep = sep)
+            case.export_csv( "file.csv" , keys = ["FOPT"] , sep = sep)
             self.assertTrue( os.path.isfile( "file.csv" ) )
             input_file = csv.DictReader( open("file.csv") , delimiter=sep)
             for row in input_file:
@@ -198,7 +198,7 @@ class SumTest(EclTest):
         with TestAreaContext("ecl/csv"):
             date_format = "%y-%m-%d"
             sep = ","
-            case.exportCSV( "file.csv" , keys = ["F*"] , sep=sep , date_format = date_format)
+            case.export_csv( "file.csv" , keys = ["F*"] , sep=sep , date_format = date_format)
             self.assertTrue( os.path.isfile( "file.csv" ) )
             with open("file.csv") as f:
                 time_index = -1
@@ -220,42 +220,42 @@ class SumTest(EclTest):
 
     def assert_solve(self, case):
         with self.assertRaises( KeyError ):
-            case.solveDays( "MISSING:KEY" , 0.56)
+            case.solve_days( "MISSING:KEY" , 0.56)
 
-        sol = case.solveDays( "FOPT" , 150 )
+        sol = case.solve_days( "FOPT" , 150 )
         self.assertEqual( len(sol) , 0 )
 
-        sol = case.solveDays( "FOPT" , -10 )
+        sol = case.solve_days( "FOPT" , -10 )
         self.assertEqual( len(sol) , 0 )
 
-        sol = case.solveDays( "FOPT" , 50 )
+        sol = case.solve_days( "FOPT" , 50 )
         self.assertEqual( len(sol) , 1 )
         self.assertFloatEqual( sol[0] , 50 )
 
-        sol = case.solveDays( "FOPT" , 50.50 )
+        sol = case.solve_days( "FOPT" , 50.50 )
         self.assertEqual( len(sol) , 1 )
         self.assertFloatEqual( sol[0] , 50.50 )
 
-        sol = case.solveDays( "FOPR" , 50.90 )
+        sol = case.solve_days( "FOPR" , 50.90 )
         self.assertEqual( len(sol) , 1 )
         self.assertFloatEqual( sol[0] , 50.00 + 1.0/86400 )
 
-        sol = case.solveDates("FOPR" , 50.90)
-        t = case.getDataStartTime( ) + datetime.timedelta( days = 50 ) + datetime.timedelta( seconds = 1 )
+        sol = case.solve_dates("FOPR" , 50.90)
+        t = case.get_data_start_time( ) + datetime.timedelta( days = 50 ) + datetime.timedelta( seconds = 1 )
         self.assertEqual( sol[0] , t )
 
-        sol = case.solveDays( "FOPR" , 50.90 , rates_clamp_lower = False)
+        sol = case.solve_days( "FOPR" , 50.90 , rates_clamp_lower = False)
         self.assertEqual( len(sol) , 1 )
         self.assertFloatEqual( sol[0] , 51.00 )
 
-        sol = case.solveDays( "FGPT" ,25.0)
+        sol = case.solve_days( "FGPT" ,25.0)
         self.assertEqual( len(sol) , 2 )
         self.assertFloatEqual( sol[0] , 25.00 )
         self.assertFloatEqual( sol[1] , 75.00 )
 
-        sol = case.solveDates( "FGPT" , 25 )
+        sol = case.solve_dates( "FGPT" , 25 )
         self.assertEqual( len(sol) , 2 )
-        t0 = case.getDataStartTime( )
+        t0 = case.get_data_start_time( )
         t1 = t0 + datetime.timedelta( days = 25 )
         t2 = t0 + datetime.timedelta( days = 75 )
         self.assertEqual( sol[0] , t1 )
@@ -320,7 +320,7 @@ class SumTest(EclTest):
         kw_list.add_keyword("FGPT")
         kw_list.add_keyword("FOPR")
 
-        t = case1.getDataStartTime( ) + datetime.timedelta( days = 43 );
+        t = case1.get_data_start_time( ) + datetime.timedelta( days = 43 );
         data = case1.get_interp_row( kw_list , t )
         for d1,d2 in zip(data, [ case1.get_interp("FOPT", date = t),
                                  case1.get_interp("FOPT", date = t),
@@ -347,10 +347,10 @@ class SumTest(EclTest):
 
         with TestAreaContext("sum_vector"):
             with cwrap.open("f1.txt","w") as f:
-                case1.dumpCSVLine(t, kw_list, f)
+                case1.dump_csv_line(t, kw_list, f)
 
             with cwrap.open("f2.txt", "w") as f:
-                case2.dumpCSVLine(t,kw_list2,f)
+                case2.dump_csv_line(t,kw_list2,f)
 
             with open("f1.txt") as f:
                 d1 = f.readline().split(",")
@@ -519,12 +519,12 @@ class SumTest(EclTest):
         numpy_vector = case.numpy_vector("FOPT")
         self.assertEqual(len(numpy_vector), len(case))
         numpy_dates = case.numpy_dates
-        self.assertEqual( numpy_dates[0].tolist(), case.getDataStartTime())
-        self.assertEqual( numpy_dates[-1].tolist(), case.getEndTime())
+        self.assertEqual( numpy_dates[0].tolist(), case.get_data_start_time())
+        self.assertEqual( numpy_dates[-1].tolist(), case.get_end_time())
 
         dates = case.dates
-        self.assertEqual( dates[0], case.getDataStartTime())
-        self.assertEqual( dates[-1], case.getEndTime())
+        self.assertEqual( dates[0], case.get_data_start_time())
+        self.assertEqual( dates[-1], case.get_end_time())
 
         dates = [datetime.datetime(2000,1,1)] + case.dates + [datetime.datetime(2020,1,1)]
         fopr = case.numpy_vector("FOPR", time_index = dates)

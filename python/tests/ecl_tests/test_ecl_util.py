@@ -30,13 +30,13 @@ class EclUtilTest(EclTest):
         self.assertEnumIsFullyDefined(EclTypeEnum, "ecl_type_enum", source_file_path)
 
     def test_file_type(self):
-        file_type , fmt , report = EclUtil.inspectExtension("CASE.X0078")
+        file_type , fmt , report = EclUtil.inspect_extension("CASE.X0078")
         self.assertEqual( file_type , EclFileEnum.ECL_RESTART_FILE )
 
     def test_file_report_nr(self):
-        report_nr = EclUtil.reportStep("CASE.X0080")
+        report_nr = EclUtil.report_step("CASE.X0080")
         self.assertEqual( report_nr , 80 )
 
         with self.assertRaises(ValueError):
-            EclUtil.reportStep("CASE.EGRID")
+            EclUtil.report_step("CASE.EGRID")
 

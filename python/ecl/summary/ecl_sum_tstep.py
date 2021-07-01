@@ -16,7 +16,6 @@
 
 from cwrap import BaseCClass
 
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import CTime
 from ecl import EclPrototype
 
@@ -84,9 +83,3 @@ class EclSumTStep(BaseCClass):
         m = self._get_ministep()
         cnt = 'sim_days={}, sim_time={}, report={}, ministep={}'
         return self._create_repr(cnt.format(d, t, r, m))
-
-
-monkey_the_camel(EclSumTStep, 'getSimDays', EclSumTStep.get_sim_days)
-monkey_the_camel(EclSumTStep, 'getReport', EclSumTStep.get_report)
-monkey_the_camel(EclSumTStep, 'getMiniStep', EclSumTStep.get_mini_step)
-monkey_the_camel(EclSumTStep, 'getSimTime', EclSumTStep.get_sim_time)

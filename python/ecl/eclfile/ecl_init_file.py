@@ -22,7 +22,7 @@ ECL_FILE_DEFAULT = EclFileFlagEnum.ECL_FILE_DEFAULT
 
 class EclInitFile(Ecl3DFile):
     def __init__(self, grid, filename, flags=ECL_FILE_DEFAULT):
-        file_type, report_step, fmt_file = EclFile.getFileType(filename)
+        file_type, report_step, fmt_file = EclFile.get_file_type(filename)
         if file_type == EclFileEnum.ECL_INIT_FILE:
             super(EclInitFile, self).__init__(grid, filename, flags)
         else:

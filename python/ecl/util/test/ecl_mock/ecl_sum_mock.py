@@ -21,7 +21,7 @@ def createEclSum( case,
     ecl_sum = EclSum.restart_writer(case , restart_case, restart_step, sim_start , dims[0] , dims[1] , dims[2])
     var_list = []
     for (kw,wgname,num,unit) in keys:
-        var_list.append( ecl_sum.addVariable( kw , wgname = wgname , num = num, unit =unit) )
+        var_list.append( ecl_sum.add_variable( kw , wgname = wgname , num = num, unit =unit) )
 
     # This is a bug! This should not be integer division, but tests are written
     # around that assumption.
@@ -37,11 +37,11 @@ def createEclSum( case,
     for report_step in range(num_report_step):
         for mini_step in range(num_mini_step):
             days = time_offset + report_step * report_step_length + mini_step * mini_step_length
-            t_step = ecl_sum.addTStep( report_step + 1 , sim_days = days )
+            t_step = ecl_sum.add_t_step( report_step + 1 , sim_days = days )
 
 
             for var in var_list:
-                key = var.getKey1( )
+                key = var.get_key1( )
 
                 if key in func_table:
                     func = func_table[key]

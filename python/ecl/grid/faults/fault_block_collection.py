@@ -17,7 +17,6 @@
 
 from cwrap import BaseCClass
 
-from ecl.util.util import monkey_the_camel
 from ecl import EclPrototype
 
 
@@ -78,7 +77,3 @@ class FaultBlockCollection(BaseCClass):
         ok = self._scan_keyword(fault_block_kw)
         if not ok:
             raise ValueError("The fault block keyword had wrong type/size")
-
-
-monkey_the_camel(FaultBlockCollection, 'getLayer', FaultBlockCollection.get_layer)
-monkey_the_camel(FaultBlockCollection, 'scanKeyword', FaultBlockCollection.scan_keyword)

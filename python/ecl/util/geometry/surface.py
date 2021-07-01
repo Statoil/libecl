@@ -158,7 +158,7 @@ class Surface(BaseCClass):
         """
         The number of values in the surface.
         """
-        return self.getNX() * self.getNY()
+        return self.get_nx() * self.get_ny()
 
 
     def inplaceSqrt(self):
@@ -246,11 +246,11 @@ class Surface(BaseCClass):
         return x.value, y.value
 
 
-    def getNX(self):
+    def get_nx(self):
         return self._get_nx()
 
 
-    def getNY(self):
+    def get_ny(self):
         return self._get_ny()
 
     def getPointset(self):
@@ -269,14 +269,14 @@ class Surface(BaseCClass):
         """Returns a tuple of 3 floats, (x,y,z) for given global index, or i and j."""
         self._assert_idx_or_i_and_j(idx, i, j)
         if idx is None:
-            nx, ny = self.getNX(), self.getNY()
+            nx, ny = self.get_nx(), self.get_ny()
             i_idx, j_idx = i,j
             if i_idx < 0:
-                i_idx += self.getNX()
+                i_idx += self.get_nx()
             if j_idx < 0:
-                j_idx += self.getNY()
-            if 0 <= i_idx < self.getNX() and 0 <= j_idx < self.getNY():
-                idx = j_idx * self.getNX() + i_idx
+                j_idx += self.get_ny()
+            if 0 <= i_idx < self.get_nx() and 0 <= j_idx < self.get_ny():
+                idx = j_idx * self.get_nx() + i_idx
             else:
                 fmt = 'Index error: i=%d not in [0,nx=%d) or j=%d not in [0,ny=%d).'
                 raise IndexError(fmt % (i, nx, j, ny))
@@ -289,5 +289,5 @@ class Surface(BaseCClass):
         self._free()
 
     def __repr__(self):
-        cnt = 'nx=%d, ny=%d' % (self.getNX(), self.getNY())
+        cnt = 'nx=%d, ny=%d' % (self.get_nx(), self.get_ny())
         return self._create_repr(cnt)

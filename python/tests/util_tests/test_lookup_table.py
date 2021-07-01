@@ -13,16 +13,16 @@ class LookupTableTest(TestCase):
         self.assertEqual(len(lookup), 0)
 
         with self.assertRaises(ValueError):
-            lookup.getMaxValue()
+            lookup.get_maxValue()
 
         with self.assertRaises(ValueError):
-            lookup.getMinValue()
+            lookup.get_minValue()
 
         with self.assertRaises(ValueError):
-            lookup.getMaxArg()
+            lookup.get_maxArg()
 
         with self.assertRaises(ValueError):
-            lookup.getMinArg()
+            lookup.get_minArg()
 
         with self.assertRaises(ValueError):
             lookup.interp(0.25)
@@ -39,10 +39,10 @@ class LookupTableTest(TestCase):
         lookup.append(0.0, 0.0)
         lookup.append(1.0, 10.0)
 
-        self.assertEqual(lookup.getMaxValue(), 10.0)
-        self.assertEqual(lookup.getMinValue(), 0.0)
-        self.assertEqual(lookup.getMaxArg(), 1.0)
-        self.assertEqual(lookup.getMinArg(), 0.0)
+        self.assertEqual(lookup.get_maxValue(), 10.0)
+        self.assertEqual(lookup.get_minValue(), 0.0)
+        self.assertEqual(lookup.get_maxArg(), 1.0)
+        self.assertEqual(lookup.get_minArg(), 0.0)
         self.assertEqual(len(lookup), 2)
 
     def test_lookup_out_of_bounds(self):

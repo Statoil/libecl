@@ -28,7 +28,6 @@ from __future__ import absolute_import
 import ctypes
 
 from cwrap import BaseCEnum
-from ecl.util.util import monkey_the_camel
 from ecl import EclPrototype
 
 class EclFileEnum(BaseCEnum):
@@ -127,7 +126,7 @@ class EclUtil(object):
         """
         Will inspect an ECLIPSE filename and return an integer type flag.
         """
-        file_type, fmt, step = EclUtil.inspectExtension(filename)
+        file_type, fmt, step = EclUtil.inspect_extension(filename)
         return file_type
 
     @staticmethod
@@ -164,6 +163,3 @@ class EclUtil(object):
 get_num_cpu = EclUtil.get_num_cpu
 get_file_type = EclUtil.get_file_type
 get_start_date = EclUtil.get_start_date
-
-monkey_the_camel(EclUtil, 'inspectExtension', EclUtil.inspect_extension, staticmethod)
-monkey_the_camel(EclUtil, 'reportStep', EclUtil.report_step, staticmethod)

@@ -33,19 +33,19 @@ class GridDualTest(EclTest):
         with TestAreaContext("python/grid-test/testDual"):
             grid = EclGrid(self.egrid_file())
             self.assertFalse(grid.dualGrid())
-            self.assertTrue(grid.getNumActiveFracture() == 0)
+            self.assertTrue(grid.get_num_activeFracture() == 0)
 
             grid2 = EclGrid(self.grid_file())
             self.assertFalse(grid.dualGrid())
-            self.assertTrue(grid.getNumActiveFracture() == 0)
+            self.assertTrue(grid.get_num_activeFracture() == 0)
 
             dgrid = EclGrid(self.createTestPath("Equinor/ECLIPSE/DualPoro/DUALPOR_MSW.EGRID"))
-            self.assertTrue(dgrid.getNumActive() == dgrid.getNumActiveFracture())
-            self.assertTrue(dgrid.getNumActive() == 46118)
+            self.assertTrue(dgrid.get_num_active() == dgrid.get_num_activeFracture())
+            self.assertTrue(dgrid.get_num_active() == 46118)
 
             dgrid2 = EclGrid(self.createTestPath("Equinor/ECLIPSE/DualPoro/DUALPOR_MSW.GRID"))
-            self.assertTrue(dgrid.getNumActive() == dgrid.getNumActiveFracture())
-            self.assertTrue(dgrid.getNumActive() == 46118)
+            self.assertTrue(dgrid.get_num_active() == dgrid.get_num_activeFracture())
+            self.assertTrue(dgrid.get_num_active() == 46118)
             self.assertTrue(dgrid.equal(dgrid2))
 
 
@@ -53,8 +53,8 @@ class GridDualTest(EclTest):
             # situation where some cells are only matrix active, and some
             # cells are only fracture active.
             dgrid = EclGrid(self.createTestPath("Equinor/ECLIPSE/DualPoro/DUAL_DIFF.EGRID"))
-            self.assertTrue(dgrid.getNumActive() == 106)
-            self.assertTrue(dgrid.getNumActiveFracture() == 105)
+            self.assertTrue(dgrid.get_num_active() == 106)
+            self.assertTrue(dgrid.get_num_activeFracture() == 105)
 
             self.assertTrue(dgrid.get_active_fracture_index(global_index=0) == -1)
             self.assertTrue(dgrid.get_active_fracture_index(global_index=2) == -1)

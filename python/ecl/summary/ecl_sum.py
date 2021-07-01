@@ -35,7 +35,6 @@ import re
 # argument. In the python code this order has been reversed.
 from cwrap import BaseCClass, CFILE
 
-from ecl.util.util import monkey_the_camel
 from ecl.util.util import StringList, CTime, DoubleVector, TimeVector, IntVector
 
 from ecl.summary import EclSumTStep
@@ -318,7 +317,7 @@ class EclSum(BaseCClass):
         have @key.
         """
         warnings.warn("The method get_vector() has been deprecated, use numpy_vector() instead", DeprecationWarning)
-        self.assertKeyValid(key)
+        self.assert_key_valid(key)
         if report_only:
             return EclSumVector(self, key, report_only=True)
         else:
@@ -568,11 +567,11 @@ class EclSum(BaseCClass):
                                 start_time.to_pydatetime(),
                                 dims[0], dims[1], dims[2])  
         for kw, wgname, num, unit in header_list:
-             var_list.append( ecl_sum.addVariable( kw , wgname = wgname , num = num, unit =unit).getKey1() )
+             var_list.append( ecl_sum.add_variable( kw , wgname = wgname , num = num, unit =unit).get_key1() )
 
         for i, time in enumerate(frame.index):
             days = (time - start_time).days
-            t_step = ecl_sum.addTStep( i+1 , days )
+            t_step = ecl_sum.add_t_step( i+1 , days )
 
             for var in var_list:
                 t_step[var] = frame.iloc[i][var]
@@ -762,7 +761,7 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
         Also available as method get_interp() on the EclSumVector
         class.
         """
-        self.assertKeyValid(key)
+        self.assert_key_valid(key)
         if days is None and date is None:
             raise ValueError("Must supply either days or date")
 
@@ -800,23 +799,23 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
         (num, timeUnit) = TimeVector.parseTimeUnit(interval)
 
         if start is None:
-            start = self.getDataStartTime()
+            start = self.get_data_start_time()
         else:
             if isinstance(start, datetime.date):
                 start = datetime.datetime(start.year, start.month, start.day, 0, 0, 0)
 
-            if start < self.getDataStartTime():
-                start = self.getDataStartTime()
+            if start < self.get_data_start_time():
+                start = self.get_data_start_time()
 
 
         if end is None:
-            end = self.getEndTime()
+            end = self.get_end_time()
         else:
             if isinstance(end, datetime.date):
                 end = datetime.datetime(end.year, end.month, end.day, 0, 0, 0)
 
-            if end > self.getEndTime():
-                end = self.getEndTime()
+            if end > self.get_end_time():
+                end = self.get_end_time()
 
         if end < start:
             raise ValueError("Invalid time interval start after end")
@@ -865,7 +864,7 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
             else:
                 trange.append(end)
 
-        data_start = self.getDataStartTime()
+        data_start = self.get_data_start_time()
         if trange[0] < data_start:
             trange[0] = CTime(data_start)
 
@@ -930,7 +929,7 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
         Also available as method get_interp_vector() on the
         EclSumVector class.
         """
-        self.assertKeyValid(key)
+        self.assert_key_valid(key)
         if days_list:
             if date_list:
                 raise ValueError("Must supply either days_list or date_list")
@@ -1233,7 +1232,7 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
 
     @property
     def data_start(self):
-        return self.getDataStartTime()
+        return self.get_data_start_time()
 
 
 
@@ -1242,18 +1241,18 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
         """
         The time of the last (loaded) time step.
         """
-        return self.getEndTime()
+        return self.get_end_time()
 
 
     @property
     def start_time(self):
-        return self.getStartTime()
+        return self.get_start_time()
 
 
     def get_data_start_time(self):
         """The first date we have data for.
 
-        Thiw will mostly be equal to getStartTime(), but in the case
+        Thiw will mostly be equal to get_start_time(), but in the case
         of restarts, where the case we have restarted from is not
         found, this time will be later than the true start of the
         field.
@@ -1495,8 +1494,8 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
            EclSum("NORNE_ATW2013.UNSMRY", [1997-11-06 00:00:00, 2006-12-01 00:00:00], keys=3781) at 0x1609e20
         """
         name = self._nicename()
-        s_time   = self.getStartTime()
-        e_time   = self.getEndTime()
+        s_time   = self.get_start_time()
+        e_time   = self.get_end_time()
         num_keys = len(self.keys())
         content = 'name="%s", time=[%s, %s], keys=%d' % (name, s_time, e_time, num_keys)
         return self._create_repr(content)
@@ -1520,7 +1519,7 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
         limit the keys which are exported:
 
           ecl_sum = EclSum("CASE")
-          ecl_sum.exportCSV("case.csv", keys=["W*:OP1", "W*:OP2", "F*T"])
+          ecl_sum.export_csv("case.csv", keys=["W*:OP1", "W*:OP2", "F*T"])
 
         Will export all well related variables for wells 'OP1' and
         'OP2' and all total field vectors.
@@ -1549,19 +1548,3 @@ EclSum._dump_csv_line = EclPrototype("void ecl_sum_fwrite_interp_csv_line(ecl_su
 EclSum._get_interp_vector = EclPrototype("void ecl_sum_get_interp_vector(ecl_sum, time_t, ecl_sum_vector, double_vector)", bind=False)
 EclSum._init_pandas_frame = EclPrototype("void ecl_sum_init_double_frame(ecl_sum, ecl_sum_vector, double*)", bind=False)
 EclSum._init_pandas_frame_interp = EclPrototype("void ecl_sum_init_double_frame_interp(ecl_sum, ecl_sum_vector, time_t_vector, double*)", bind=False)
-
-monkey_the_camel(EclSum, 'varType', EclSum.var_type, classmethod)
-monkey_the_camel(EclSum, 'addVariable', EclSum.add_variable)
-monkey_the_camel(EclSum, 'addTStep', EclSum.add_t_step)
-monkey_the_camel(EclSum, 'assertKeyValid', EclSum.assert_key_valid)
-monkey_the_camel(EclSum, 'scaleVector', EclSum.scale_vector)
-monkey_the_camel(EclSum, 'shiftVector', EclSum.shift_vector)
-monkey_the_camel(EclSum, 'timeRange', EclSum.time_range)
-monkey_the_camel(EclSum, 'blockedProduction', EclSum.blocked_production)
-monkey_the_camel(EclSum, 'getDataStartTime', EclSum.get_data_start_time)
-monkey_the_camel(EclSum, 'getStartTime', EclSum.get_start_time)
-monkey_the_camel(EclSum, 'getEndTime', EclSum.get_end_time)
-monkey_the_camel(EclSum, 'solveDates', EclSum.solve_dates)
-monkey_the_camel(EclSum, 'solveDays', EclSum.solve_days)
-monkey_the_camel(EclSum, 'dumpCSVLine', EclSum.dump_csv_line)
-monkey_the_camel(EclSum, 'exportCSV', EclSum.export_csv)

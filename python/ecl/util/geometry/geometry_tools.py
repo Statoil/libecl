@@ -392,7 +392,7 @@ class GeometryTools(object):
             d_list.append( (GeometryTools.distance( p0 , p) , [p0 , p]) )
 
         if len(d_list) == 0:
-            raise ValueError("Polyline %s can not be extended to %s" % (polyline.getName() , target_polyline.getName()))
+            raise ValueError("Polyline %s can not be extended to %s" % (polyline.get_name() , target_polyline.get_name()))
 
         d_list.sort( key = lambda x: x[0])
         return d_list[0][1]

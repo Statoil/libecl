@@ -43,19 +43,19 @@ class LookupTable(BaseCClass):
         if not upper_limit is None:
             self.setUpperLimit(upper_limit)
 
-    def getMaxValue(self):
+    def get_maxValue(self):
         self.assertSize(1)
         return self._max()
 
-    def getMinValue(self):
+    def get_minValue(self):
         self.assertSize(1)
         return self._min()
 
-    def getMinArg(self):
+    def get_minArg(self):
         self.assertSize(1)
         return self._arg_min()
 
-    def getMaxArg(self):
+    def get_maxArg(self):
         self.assertSize(1)
         return self._arg_max()
 
@@ -73,19 +73,19 @@ class LookupTable(BaseCClass):
     # Deprecated properties
     @property
     def max(self):
-        return self.getMaxValue()
+        return self.get_maxValue()
 
     @property
     def min(self):
-        return self.getMinValue()
+        return self.get_minValue()
 
     @property
     def arg_max(self):
-        return self.getMaxArg()
+        return self.get_maxArg()
 
     @property
     def arg_min(self):
-        return self.getMinArg()
+        return self.get_minArg()
 
     def setLowerLimit(self, value):
         self._set_low_limit(value)
@@ -101,12 +101,12 @@ class LookupTable(BaseCClass):
 
     def interp(self, x):
         self.assertSize(2)
-        if x < self.getMinArg():
+        if x < self.get_minArg():
             if not self.hasLowerLimit():
-                raise ValueError("Interpolate argument:%g is outside valid interval: [%g,%g]" % (x, self.getMinArg(), self.getMaxArg()))
-        elif x > self.getMaxArg():
+                raise ValueError("Interpolate argument:%g is outside valid interval: [%g,%g]" % (x, self.get_minArg(), self.get_maxArg()))
+        elif x > self.get_maxArg():
             if not self.hasUpperLimit():
-                raise ValueError("Interpolate argument:%g is outside valid interval: [%g,%g]" % (x, self.getMinArg(), self.getMaxArg()))
+                raise ValueError("Interpolate argument:%g is outside valid interval: [%g,%g]" % (x, self.get_minArg(), self.get_maxArg()))
 
         return self._interp(x)
 
