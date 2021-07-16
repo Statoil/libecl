@@ -1,10 +1,7 @@
 project(libecl-applications)
 
 function(target_link_libecl target)
-  target_link_libraries(${target} ecl)
-  if(SKBUILD)
-    set_target_properties(${target} PROPERTIES INSTALL_RPATH "$ORIGIN/../.libs")
-  endif()
+  target_link_libraries(${target} ecl-static)
 endfunction()
 
 if(BUILD_APPLICATIONS)
@@ -94,9 +91,11 @@ if(apps)
         PROPERTY LINK_FLAGS ${OpenMP_C_FLAGS})
     endforeach()
   endif()
+  if(NOT SKBUILD)
   install(
     TARGETS ${apps}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  endif()
 endif()

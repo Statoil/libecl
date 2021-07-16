@@ -42,6 +42,7 @@
 #include <ert/ecl/smspec_node.hpp>
 
 #include "detail/util/path.hpp"
+#include "detail/ecl/ecl_sum.hpp"
 
 /**
    The ECLIPSE summary data is organised in a header file (.SMSPEC)
@@ -86,27 +87,6 @@
    These matters are documented further in the ecl_smspec.c and
    ecl_sum_data.c files.
 */
-
-#define ECL_SUM_ID 89067
-
-struct ecl_sum_struct {
-    UTIL_TYPE_ID_DECLARATION;
-    ecl_smspec_type *smspec; /* Internalized version of the SMSPEC file. */
-    ecl_sum_data_type *data; /* The data - can be NULL. */
-    ecl_sum_type *restart_case;
-
-    bool fmt_case;
-    bool unified;
-    char *key_join_string;
-    char *
-        path; /* The path - as given for the case input. Can be NULL for cwd. */
-    char *abs_path; /* Absolute path. */
-    char *base;     /* Only the basename. */
-    char *
-        ecl_case; /* This is the current case, with optional path component. == path + base*/
-    char *
-        ext; /* Only to support selective loading of formatted|unformatted and unified|multiple. (can be NULL) */
-};
 
 UTIL_SAFE_CAST_FUNCTION(ecl_sum, ECL_SUM_ID);
 UTIL_IS_INSTANCE_FUNCTION(ecl_sum, ECL_SUM_ID);

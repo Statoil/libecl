@@ -22,7 +22,7 @@ public:
     time_t iget_sim_time(int time_index) const;
     double iget_sim_seconds(int time_index) const;
     std::vector<int> report_steps(int offset) const;
-    double iget(int time_index, int params_index) const;
+    float iget(int time_index, int params_index) const;
 
 private:
     int size; //Number of entries in the smspec index

@@ -28,6 +28,7 @@ extern "C" {
 #include <ert/util/time_t_vector.hpp>
 #include <ert/util/parser.hpp>
 #include <ert/ecl/ecl_type.hpp>
+#include <ert/ecl/enums.h>
 
 typedef enum {
     ECL_OTHER_FILE = 0,
@@ -99,13 +100,6 @@ typedef enum {
         .value = 4, .name = "ECL_WATER_PHASE"                                  \
     }
 #define ECL_PHASE_ENUM_SIZE 3
-
-typedef enum {
-    ECL_METRIC_UNITS = 1,
-    ECL_FIELD_UNITS = 2,
-    ECL_LAB_UNITS = 3,
-    ECL_PVT_M_UNITS = 4
-} ert_ecl_unit_enum;
 
 // For unformatted files:
 #define ECL_BOOL_TRUE_INT                                                      \

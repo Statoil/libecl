@@ -69,7 +69,7 @@ std::vector<double> unsmry_loader::get_vector(int pos) const {
 }
 
 // This is horribly inefficient
-double unsmry_loader::iget(int time_index, int params_index) const {
+float unsmry_loader::iget(int time_index, int params_index) const {
     int_vector_type *index_map = int_vector_alloc(1, params_index);
     float value;
     ecl_file_view_index_fload_kw(this->file_view, PARAMS_KW, time_index,

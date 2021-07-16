@@ -24,6 +24,8 @@ class EclUtilTest(EclTest):
         source_file_path = "lib/include/ert/ecl/ecl_util.hpp"
         self.assertEnumIsFullyDefined(EclFileEnum, "ecl_file_enum", source_file_path)
         self.assertEnumIsFullyDefined(EclPhaseEnum, "ecl_phase_enum", source_file_path)
+
+        source_file_path = "lib/include/ert/ecl/enums.h"
         self.assertEnumIsFullyDefined(
             EclUnitTypeEnum, "ert_ecl_unit_enum", source_file_path
         )

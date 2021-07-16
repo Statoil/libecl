@@ -23,6 +23,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
+#include <memory>
 
 #include <ert/util/util.h>
 #include <ert/util/vector.hpp>
@@ -42,6 +43,7 @@
 #include <ert/ecl/ecl_kw_magic.hpp>
 #include <ert/ecl/ecl_sum_vector.hpp>
 
+#include "detail/ecl/ecl_sum_data.hpp"
 #include "detail/ecl/ecl_sum_file_data.hpp"
 
 /*
@@ -56,183 +58,6 @@
   list of ecl_sum_file_data instances and dispatching method calls to the right
   ecl_sum_file_data instance.
 */
-
-namespace {
-
-/*
-  The class CaseIndex and the struct IndexNode are used to maintain a list of
-  the ecl_sum_file_data instances, and lookup the correct one based one various
-  time related arguments.
-*/
-
-struct IndexNode {
-    IndexNode(int d, int o, int l) {
-        this->data_index = d;
-        this->offset = o;
-        this->length = l;
-    }
-
-    int end() const { return this->offset + this->length; }
-
-    int data_index;
-    int offset;
-    int length;
-    int report1;
-    int report2;
-    time_t time1;
-    time_t time2;
-    double days1;
-    double days2;
-    std::vector<int> params_map;
-};
-
-class CaseIndex {
-public:
-    IndexNode &add(int length) {
-        int offset = 0;
-        int data_index = this->index.size();
-
-        if (!this->index.empty())
-            offset = this->index.back().end();
-
-        this->index.emplace_back(data_index, offset, length);
-        return this->index.back();
-    }
-
-    /*
-  The lookup_time() and lookup_report() methods will lookup which file_data
-  instance corresponds to the time/report argument. The methods will return two
-  pointers to file_data instances, if the argument is inside one file_data
-  instance the pointers will be equal - otherwise they will point to the
-  file_data instance before and after the argument:
-
-  File 1                     File 2
-  |------|-----|------|      |----|----------|---|
-      /|\                /|\
-       |                  |
-       |                  |
-       A                  B
-
-  For time A the lookup_time function will return <file1,file1> whereas for time
-  B the function will return <file1,file2>.
- */
-
-    std::pair<const IndexNode *, const IndexNode *>
-    lookup_time(time_t sim_time) const {
-        auto iter = this->index.begin();
-        auto next = this->index.begin();
-        if (sim_time < iter->time1)
-            throw std::invalid_argument("Simulation time out of range");
-
-        ++next;
-        while (true) {
-            double t1 = iter->time1;
-            double t2 = iter->time2;
-
-            if (sim_time >= t1) {
-                if (sim_time <= t2)
-                    return std::make_pair<const IndexNode *, const IndexNode *>(
-                        &(*iter), &(*iter));
-
-                if (next == this->index.end())
-                    throw std::invalid_argument("Simulation days out of range");
-
-                if (sim_time < next->time1)
-                    return std::make_pair<const IndexNode *, const IndexNode *>(
-                        &(*iter), &(*next));
-            }
-            ++next;
-            ++iter;
-        }
-    }
-
-    std::pair<const IndexNode *, const IndexNode *>
-    lookup_days(double days) const {
-        auto iter = this->index.begin();
-        auto next = this->index.begin();
-        if (days < iter->days1)
-            throw std::invalid_argument("Simulation days out of range");
-
-        ++next;
-        while (true) {
-            double d1 = iter->days1;
-            double d2 = iter->days2;
-
-            if (days >= d1) {
-                if (days <= d2)
-                    return std::make_pair<const IndexNode *, const IndexNode *>(
-                        &(*iter), &(*iter));
-
-                if (next == this->index.end())
-                    throw std::invalid_argument("Simulation days out of range");
-
-                if (days < next->days1)
-                    return std::make_pair<const IndexNode *, const IndexNode *>(
-                        &(*iter), &(*next));
-            }
-            ++next;
-            ++iter;
-        }
-    }
-
-    const IndexNode &lookup(int internal_index) const {
-        for (const auto &node : this->index)
-            if (internal_index >= node.offset && internal_index < node.end())
-                return node;
-
-        throw std::invalid_argument("Internal error when looking up index: " +
-                                    std::to_string(internal_index));
-    }
-
-    const IndexNode &lookup_report(int report) const {
-        for (const auto &node : this->index)
-            if (node.report1 <= report && node.report2 >= report)
-                return node;
-
-        throw std::invalid_argument("Internal error when looking up report: " +
-                                    std::to_string(report));
-    }
-
-    /*
-      This will check that we have a datafile which report range covers the
-      report argument, in adition there can be 'holes' in the series - that must
-      be checked by actually querying the data_file object.
-    */
-
-    bool has_report(int report) const {
-        for (const auto &node : this->index)
-            if (node.report1 <= report && node.report2 >= report)
-                return true;
-
-        return false;
-    }
-
-    IndexNode &back() { return this->index.back(); }
-
-    void clear() { this->index.clear(); }
-
-    int length() const { return this->index.back().end(); }
-
-    std::vector<IndexNode>::const_iterator begin() const {
-        return this->index.begin();
-    }
-
-    std::vector<IndexNode>::const_iterator end() const {
-        return this->index.end();
-    }
-
-private:
-    std::vector<IndexNode> index;
-};
-
-} // namespace
-
-struct ecl_sum_data_struct {
-    const ecl_smspec_type *smspec;
-    std::vector<ecl::ecl_sum_file_data *>
-        data_files; // List of ecl_sum_file_data instances
-    CaseIndex index;
-};
 
 static void ecl_sum_data_build_index(ecl_sum_data_type *self);
 static double ecl_sum_data_iget_sim_seconds(const ecl_sum_data_type *data,
@@ -824,11 +649,11 @@ static double ecl_sum_data_interp_get(const ecl_sum_data_type *data,
            ecl_sum_data_iget(data, time_index2, params_index) * weight2;
 }
 
-static double ecl_sum_data_vector_iget(const ecl_sum_data_type *data,
-                                       time_t sim_time, int params_index,
-                                       bool is_rate, int time_index1,
-                                       int time_index2, double weight1,
-                                       double weight2) {
+extern "C" double ecl_sum_data_vector_iget(const ecl_sum_data_type *data,
+                                           time_t sim_time, int params_index,
+                                           bool is_rate, int time_index1,
+                                           int time_index2, double weight1,
+                                           double weight2) {
 
     double value = 0.0;
     if (is_rate) {
@@ -1071,10 +896,10 @@ ecl_sum_data_alloc_time_vector(const ecl_sum_data_type *data,
     return time_vector;
 }
 
-static void ecl_sum_data_init_double_vector__(const ecl_sum_data_type *data,
-                                              int main_params_index,
-                                              double *output_data,
-                                              bool report_only) {
+static void ecl_sum_data_init_float_vector__(const ecl_sum_data_type *data,
+                                             int main_params_index,
+                                             float *output_data,
+                                             bool report_only) {
     int offset = 0;
     for (const auto &index_node : data->index) {
         const auto &data_file = data->data_files[index_node.data_index];
@@ -1085,7 +910,7 @@ static void ecl_sum_data_init_double_vector__(const ecl_sum_data_type *data,
             const ecl::smspec_node &smspec_node =
                 ecl_smspec_iget_node_w_params_index(data->smspec,
                                                     main_params_index);
-            double default_value = smspec_node.get_default();
+            float default_value = smspec_node.get_default();
             offset +=
                 data_file->get_data_report(params_index, index_node.length,
                                            &output_data[offset], default_value);
@@ -1114,13 +939,17 @@ void ecl_sum_data_init_datetime64_vector(const ecl_sum_data_type *data,
 
 void ecl_sum_data_init_double_vector(const ecl_sum_data_type *data,
                                      int params_index, double *output_data) {
-    ecl_sum_data_init_double_vector__(data, params_index, output_data, false);
+    auto len = data->index.length();
+    auto output_data_f32 = std::make_unique<float[]>(len);
+    ecl_sum_data_init_float_vector__(data, params_index, output_data_f32.get(),
+                                     false);
+    std::copy_n(output_data_f32.get(), len, output_data);
 }
 
 double_vector_type *
 ecl_sum_data_alloc_data_vector(const ecl_sum_data_type *data, int params_index,
                                bool report_only) {
-    std::vector<double> output_data;
+    std::vector<float> output_data;
     if (report_only)
         output_data.resize(1 + ecl_sum_data_get_last_report_step(data) -
                            ecl_sum_data_get_first_report_step(data));
@@ -1130,15 +959,13 @@ ecl_sum_data_alloc_data_vector(const ecl_sum_data_type *data, int params_index,
     if (params_index >= ecl_smspec_get_params_size(data->smspec))
         throw std::out_of_range("Out of range");
 
-    ecl_sum_data_init_double_vector__(data, params_index, output_data.data(),
-                                      report_only);
+    ecl_sum_data_init_float_vector__(data, params_index, output_data.data(),
+                                     report_only);
     double_vector_type *data_vector =
         double_vector_alloc(output_data.size(), 0);
-    {
-        double *tmp_data = double_vector_get_ptr(data_vector);
-        memcpy(tmp_data, output_data.data(),
-               output_data.size() * sizeof(double));
-    }
+
+    double *tmp_data = double_vector_get_ptr(data_vector);
+    std::copy(output_data.cbegin(), output_data.cend(), tmp_data);
     return data_vector;
 }
 

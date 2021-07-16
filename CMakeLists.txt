@@ -1,18 +1,15 @@
-cmake_minimum_required(
-  VERSION 2.8.12) # If you are creating Python wrappers for Windows, the actual
-                  # version requirement is 3.4
+cmake_minimum_required(VERSION 3.12)
 project(ecl C CXX)
 
 include(GNUInstallDirs)
 include(TestBigEndian)
 
-if(NOT DEFINED CMAKE_MACOSX_RPATH)
-  # There is some weirdness around this variable, the default value is different
-  # depending on the cmake version, see policy CMP0042. A more explicit way to
-  # treat this would be `cmake_policy(SET CMP0042 NEW)` but that would fail on
-  # CMake 2.8.12 (the variable exists but the policy doesn't)
-  set(CMAKE_MACOSX_RPATH ON)
-endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+# set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer
+# -fsanitize=address") set (CMAKE_LINKER_FLAGS_DEBUG
+# "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 
 # -----------------------------------------------------------------
 
@@ -174,7 +171,6 @@ if(MSVC)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
-find_package(CXX11Features)
 
 # -----------------------------------------------------------------
 
@@ -387,6 +383,7 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(applications)
 add_subdirectory(bin)
+add_subdirectory(python)
 
 if(ENABLE_PYTHON)
   message(
@@ -403,12 +400,6 @@ if(ENABLE_PYTHON AND ERT_WINDOWS)
 endif()
 
 if(ENABLE_PYTHON)
-  # If finding the Python interpreter and required packages fails in the
-  # python/CMakeLists.txt file the ENABLE_PYTHON will be set to OFF.
-  add_subdirectory(python)
-endif()
-
-if(ENABLE_PYTHON)
   if(NOT ${BUILD_SHARED_LIBS})
     message(FATAL_ERROR "The Python wrappers require shared libraries")
   endif()
@@ -419,4 +410,25 @@ if(NOT SKBUILD)
   install(EXPORT ecl-config DESTINATION share/cmake/ecl)
   export(TARGETS ecl FILE eclConfig.cmake)
   export(PACKAGE ecl)
+endif()
+
+if(NOT SKBUILD)
+  install(
+    TARGETS ecl
+    EXPORT ecl-config
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+else()
+  install(TARGETS ecl LIBRARY DESTINATION python/ecl/.libs)
+  install(TARGETS _native DESTINATION python/ecl)
+  install(DIRECTORY lib/include/ DESTINATION python/ecl/.include)
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/include/
+          DESTINATION python/ecl/.include)
+  if (apps)
+    install(TARGETS ${apps} RUNTIME DESTINATION python/ecl/.bin)
+  endif()
 endif()

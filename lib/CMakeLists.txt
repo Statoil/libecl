@@ -57,93 +57,97 @@ configure_file(ert_api_config.h.in include/ert/util/ert_api_config.h)
 configure_file(build_config.hpp.in include/ert/util/build_config.hpp)
 configure_file(ert_api_config.hpp.in include/ert/util/ert_api_config.hpp)
 
-add_library(
-  ecl
-  util/rng.cpp
-  util/lookup_table.cpp
-  util/statistics.cpp
-  util/mzran.cpp
-  util/hash_node.cpp
-  util/hash_sll.cpp
-  util/path.cpp
-  util/hash.cpp
-  util/node_data.cpp
-  util/node_ctype.cpp
-  util/util.cpp
-  util/util_symlink.cpp
-  util/util_lfs.c
-  util/util_unlink.cpp
-  util/vector.cpp
-  util/parser.cpp
-  util/stringlist.cpp
-  util/buffer.cpp
-  util/string_util.cpp
-  util/type_vector_functions.cpp
-  util/ecl_version.cpp
-  util/perm_vector.cpp
-  util/test_util.cpp
-  util/cxx_string_util.cpp
-  ${opt_srcs}
-  ecl/ecl_rsthead.cpp
-  ecl/ecl_sum_tstep.cpp
-  ecl/ecl_rst_file.cpp
-  ecl/ecl_init_file.cpp
-  ecl/ecl_grid_cache.cpp
-  ecl/smspec_node.cpp
-  ecl/ecl_kw_grdecl.cpp
-  ecl/ecl_file_kw.cpp
-  ecl/ecl_file_view.cpp
-  ecl/ecl_grav.cpp
-  ecl/ecl_grav_calc.cpp
-  ecl/ecl_smspec.cpp
-  ecl/ecl_unsmry_loader.cpp
-  ecl/ecl_sum_data.cpp
-  ecl/ecl_sum_file_data.cpp
-  ecl/ecl_util.cpp
-  ecl/ecl_kw.cpp
-  ecl/ecl_sum.cpp
-  ecl/ecl_sum_vector.cpp
-  ecl/fortio.c
-  ecl/ecl_rft_file.cpp
-  ecl/ecl_rft_node.cpp
-  ecl/ecl_rft_cell.cpp
-  ecl/ecl_grid.cpp
-  ecl/ecl_coarse_cell.cpp
-  ecl/ecl_box.cpp
-  ecl/ecl_io_config.cpp
-  ecl/ecl_file.cpp
-  ecl/ecl_region.cpp
-  ecl/ecl_subsidence.cpp
-  ecl/ecl_grid_dims.cpp
-  ecl/grid_dims.cpp
-  ecl/nnc_info.cpp
-  ecl/ecl_grav_common.cpp
-  ecl/nnc_vector.cpp
-  ecl/ecl_nnc_export.cpp
-  ecl/ecl_nnc_data.cpp
-  ecl/ecl_nnc_geometry.cpp
-  ecl/layer.cpp
-  ecl/fault_block.cpp
-  ecl/fault_block_layer.cpp
-  ecl/ecl_type.cpp
-  ecl/ecl_type_python.cpp
-  ecl/well_state.cpp
-  ecl/well_conn.cpp
-  ecl/well_info.cpp
-  ecl/well_ts.cpp
-  ecl/well_conn_collection.cpp
-  ecl/well_segment.cpp
-  ecl/well_segment_collection.cpp
-  ecl/well_branch_collection.cpp
-  ecl/well_rseg_loader.cpp
-  ecl/FortIO.cpp
-  ecl/EclFilename.cpp
-  geometry/geo_surface.cpp
-  geometry/geo_util.cpp
-  geometry/geo_pointset.cpp
-  geometry/geo_region.cpp
-  geometry/geo_polygon.cpp
-  geometry/geo_polygon_collection.cpp)
+set(ECL_SOURCES
+    util/rng.cpp
+    util/lookup_table.cpp
+    util/statistics.cpp
+    util/mzran.cpp
+    util/hash_node.cpp
+    util/hash_sll.cpp
+    util/path.cpp
+    util/hash.cpp
+    util/node_data.cpp
+    util/node_ctype.cpp
+    util/util.cpp
+    util/util_symlink.cpp
+    util/util_lfs.c
+    util/util_unlink.cpp
+    util/vector.cpp
+    util/parser.cpp
+    util/stringlist.cpp
+    util/buffer.cpp
+    util/string_util.cpp
+    util/type_vector_functions.cpp
+    util/ecl_version.cpp
+    util/perm_vector.cpp
+    util/test_util.cpp
+    util/cxx_string_util.cpp
+    ${opt_srcs}
+    ecl/ecl_rsthead.cpp
+    ecl/ecl_sum_tstep.cpp
+    ecl/ecl_rst_file.cpp
+    ecl/ecl_init_file.cpp
+    ecl/ecl_grid_cache.cpp
+    ecl/smspec_node.cpp
+    ecl/ecl_kw_grdecl.cpp
+    ecl/ecl_file_kw.cpp
+    ecl/ecl_file_view.cpp
+    ecl/ecl_grav.cpp
+    ecl/ecl_grav_calc.cpp
+    ecl/ecl_smspec.cpp
+    ecl/ecl_unsmry_loader.cpp
+    ecl/ecl_sum_data.cpp
+    ecl/ecl_sum_file_data.cpp
+    ecl/ecl_util.cpp
+    ecl/ecl_kw.cpp
+    ecl/ecl_sum.cpp
+    ecl/ecl_sum_vector.cpp
+    ecl/fortio.c
+    ecl/ecl_rft_file.cpp
+    ecl/ecl_rft_node.cpp
+    ecl/ecl_rft_cell.cpp
+    ecl/ecl_grid.cpp
+    ecl/ecl_coarse_cell.cpp
+    ecl/ecl_box.cpp
+    ecl/ecl_io_config.cpp
+    ecl/ecl_file.cpp
+    ecl/ecl_region.cpp
+    ecl/ecl_subsidence.cpp
+    ecl/ecl_grid_dims.cpp
+    ecl/grid_dims.cpp
+    ecl/nnc_info.cpp
+    ecl/ecl_grav_common.cpp
+    ecl/nnc_vector.cpp
+    ecl/ecl_nnc_export.cpp
+    ecl/ecl_nnc_data.cpp
+    ecl/ecl_nnc_geometry.cpp
+    ecl/layer.cpp
+    ecl/fault_block.cpp
+    ecl/fault_block_layer.cpp
+    ecl/ecl_type.cpp
+    ecl/ecl_type_python.cpp
+    ecl/well_state.cpp
+    ecl/well_conn.cpp
+    ecl/well_info.cpp
+    ecl/well_ts.cpp
+    ecl/well_conn_collection.cpp
+    ecl/well_segment.cpp
+    ecl/well_segment_collection.cpp
+    ecl/well_branch_collection.cpp
+    ecl/well_rseg_loader.cpp
+    ecl/FortIO.cpp
+    ecl/EclFilename.cpp
+    geometry/geo_surface.cpp
+    geometry/geo_util.cpp
+    geometry/geo_pointset.cpp
+    geometry/geo_region.cpp
+    geometry/geo_polygon.cpp
+    geometry/geo_polygon_collection.cpp)
+
+add_library(ecl-static STATIC ${ECL_SOURCES})
+set_property(TARGET ecl-static PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+add_library(ecl SHARED ${ECL_SOURCES})
 
 if(ERT_WINDOWS)
   set_target_properties(ecl PROPERTIES PREFIX "lib")
@@ -152,8 +156,19 @@ if(ERT_WINDOWS)
   endif()
 endif()
 
+target_link_libraries(ecl-static PUBLIC ${m} ${dl} ${pthread} ${blas} ${zlib}
+                                        ${shlwapi})
 target_link_libraries(ecl PUBLIC ${m} ${dl} ${pthread} ${blas} ${zlib}
                                  ${shlwapi})
+
+target_include_directories(
+  ecl-static
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+         $<INSTALL_INTERFACE:include>
+  PRIVATE ${ZLIB_INCLUDE_DIRS} util include
+          ${CMAKE_CURRENT_SOURCE_DIR}/private-include
+          ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 target_include_directories(
   ecl
@@ -163,6 +178,15 @@ target_include_directories(
   PRIVATE ${ZLIB_INCLUDE_DIRS} util include
           ${CMAKE_CURRENT_SOURCE_DIR}/private-include
           ${CMAKE_CURRENT_BINARY_DIR}/include)
+
+target_compile_definitions(
+  ecl-static
+  PRIVATE -DGIT_COMMIT=${GIT_COMMIT}
+          -DGIT_COMMIT_SHORT=${GIT_COMMIT_SHORT}
+          -DECL_VERSION_MAJOR=${ECL_VERSION_MAJOR}
+          -DECL_VERSION_MINOR=${ECL_VERSION_MINOR}
+          -DECL_VERSION_MICRO=${ECL_VERSION_MICRO}
+          $<$<BOOL:${BIG_ENDIAN}>:HOST_BIG_ENDIAN>)
 
 target_compile_definitions(
   ecl
@@ -184,19 +208,11 @@ if(ERT_USE_OPENMP)
   target_link_libraries(ecl PUBLIC ${OpenMP_EXE_LINKER_FLAGS})
 endif()
 
+if(NOT SKBUILD)
 set_target_properties(
   ecl PROPERTIES VERSION ${ECL_VERSION_MAJOR}.${ECL_VERSION_MINOR}
                  SOVERSION ${ECL_VERSION_MAJOR})
-
-install(
-  TARGETS ecl
-  EXPORT ecl-config
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
 
 if(NOT BUILD_TESTS)
   return()

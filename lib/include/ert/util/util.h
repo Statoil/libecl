@@ -26,7 +26,9 @@
 #include <sys/types.h>
 #include <time.h>
 
+#ifndef NO_CONFIG
 #include <ert/util/ert_api_config.hpp>
+#endif
 
 #ifdef ERT_HAVE_GETUID
 #include <sys/stat.h>

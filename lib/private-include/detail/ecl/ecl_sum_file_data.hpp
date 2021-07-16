@@ -2,16 +2,20 @@
 #include <memory>
 #include <array>
 
-#include <ert/util/vector.hpp>
+#define INVALID_MINISTEP_NR -1
+#define INVALID_TIME_T 0
 
-#include <ert/ecl/ecl_smspec.hpp>
-#include <ert/ecl/ecl_sum_tstep.hpp>
-#include <ert/ecl/ecl_file.hpp>
+typedef struct ecl_file_struct ecl_file_type;
+typedef struct ecl_file_view_struct ecl_file_view_type;
+typedef struct ecl_smspec_struct ecl_smspec_type;
+typedef struct fortio_struct fortio_type;
+typedef struct vector_struct vector_type;
+typedef struct stringlist_struct stringlist_type;
+typedef struct ecl_sum_tstep_struct ecl_sum_tstep_type;
 
 namespace ecl {
 
-#define INVALID_MINISTEP_NR -1
-#define INVALID_TIME_T 0
+class unsmry_loader;
 
 struct IndexNode {
 
@@ -89,7 +93,7 @@ public:
 
     int length_before(time_t end_time) const;
     void get_time(int length, time_t *data);
-    void get_data(int params_index, int length, double *data);
+    void get_data(int params_index, int length, float *data);
     int length() const;
     time_t get_data_start() const;
     time_t get_sim_end() const;
@@ -105,8 +109,8 @@ public:
     bool report_step_equal(const ecl_sum_file_data &other, bool strict) const;
     int report_before(time_t end_time) const;
     int get_time_report(int max_internal_index, time_t *data);
-    int get_data_report(int params_index, int max_internal_index, double *data,
-                        double default_value);
+    int get_data_report(int params_index, int max_internal_index, float *data,
+                        float default_value);
     int first_report() const;
     int last_report() const;
     int iget_report(int time_index) const;
