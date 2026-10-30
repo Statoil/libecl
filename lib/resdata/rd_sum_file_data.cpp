@@ -500,7 +500,7 @@ double rd_sum_file_data::get_days_start() const {
         throw std::out_of_range(
             "rd_sum_file_data::get_days_start(): index size is 0");
     const auto &node = this->index[0];
-    return node.sim_seconds * 86400;
+    return node.sim_seconds / 86400;
 }
 
 bool rd_sum_file_data::check_file(rd_file_type *rd_file) {
