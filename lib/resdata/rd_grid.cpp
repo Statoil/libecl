@@ -2407,6 +2407,11 @@ static void rd_grid_init_nnc_cells(rd_grid_type *grid1, rd_grid_type *grid2,
                                    const rd_kw_type *keyword1,
                                    const rd_kw_type *keyword2) {
 
+    if (rd_kw_get_size(keyword1) != rd_kw_get_size(keyword2))
+        throw std::invalid_argument(fmt::format(
+            "Invalid NNC in grid file: {} has {} elements, but {} has {}",
+            rd_kw_get_header(keyword1), rd_kw_get_size(keyword1),
+            rd_kw_get_header(keyword2), rd_kw_get_size(keyword2)));
     int *grid1_nnc_cells = rd_kw_get_int_ptr(keyword1);
     int *grid2_nnc_cells = rd_kw_get_int_ptr(keyword2);
     int nnc_count = rd_kw_get_size(keyword2);
@@ -2827,6 +2832,21 @@ static rd_grid_ptr rd_grid_alloc_GRID__(rd_grid_type *global_grid,
             rd_file_iget_named_kw(rd_file, COORDS_KW, index + cell_offset);
         const rd_kw_type *corners_kw =
             rd_file_iget_named_kw(rd_file, CORNERS_KW, index + cell_offset);
+
+        const int kw_coords_size = rd_kw_get_size(coords_kw);
+        if (kw_coords_size != 4 && kw_coords_size != 5 && kw_coords_size != 7)
+            throw std::invalid_argument(
+                fmt::format("Invalid size of COORDS keyword = {}, expected "
+                            "4, 5 or 7",
+                            kw_coords_size));
+        if (coords_size != -1 && coords_size != kw_coords_size)
+            throw std::invalid_argument(
+                "COORDS keywords of different sizes in GRID file");
+        if (rd_kw_get_size(corners_kw) != 24)
+            throw std::invalid_argument(
+                fmt::format("Invalid size of CORNERS keyword = {}, expected "
+                            "24",
+                            rd_kw_get_size(corners_kw)));
 
         coords[index] = rd_kw_get_int_ptr(coords_kw);
         corners[index] = rd_kw_get_float_ptr(corners_kw);

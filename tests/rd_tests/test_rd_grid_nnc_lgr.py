@@ -15,6 +15,7 @@ from ._grid_fixtures import (
     load_grid_file_with_lgr_parent,
     load_grid_file_with_mapaxes,
     load_grid_file_with_nested_lgr,
+    write_egrid_dual_porosity,
     write_egrid_with_single_lgr,
 )
 
@@ -364,3 +365,12 @@ def test_that_egrid_with_amalgamated_lgr_to_lgr_nnc_loads(tmp_path):
     )
     assert grid.has_lgr("LGR1")
     assert grid.has_lgr("LGR2")
+
+
+def test_that_nnc1_shorter_than_nnc2_is_rejected(tmp_path):
+    actnum = [CELL_ACTIVE_MATRIX | CELL_ACTIVE_FRACTURE] * 4
+    filename = tmp_path / "SHORT_NNC1.EGRID"
+    write_egrid_dual_porosity(filename, 1, 1, 4, actnum, nnc1=[1], nnc2=[2] * 100000)
+
+    with pytest.raises(ValueError, match=r"NNC1.*NNC2"):
+        Grid(str(filename))

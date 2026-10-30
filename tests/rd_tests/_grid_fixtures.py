@@ -562,6 +562,19 @@ def write_grid_file_with_mapaxes(filename: Path, mapaxes: Sequence[float]) -> No
         write_float_kw(f, CORNERS_KW, list(UNIT_CELL_CORNERS))
 
 
+def write_grid_file_with_cell_keywords(
+    filename: Path, coords: Sequence[int], corners: Sequence[float]
+) -> None:
+    """Write a 1x1x1 GRID file with the given COORDS and CORNERS contents."""
+    with openFortIO(str(filename), mode=FortIO.WRITE_MODE) as f:
+        _write_grid_dimens(f, 1, 1, 1)
+        _write_grid_mapunits(f)
+        _write_grid_gridunit(f)
+        _write_grid_radial_false(f)
+        write_int_kw(f, COORDS_KW, list(coords))
+        write_float_kw(f, CORNERS_KW, list(corners))
+
+
 def write_fegrid_minimal(filename: Path) -> None:
     grid = make_rectangular_grid(1, 1, 1, 1.0, 1.0, 1.0)
     with openFortIO(str(filename), mode=FortIO.WRITE_MODE, fmt_file=True) as f:
