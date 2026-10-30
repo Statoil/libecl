@@ -18,15 +18,23 @@
 
 bool *rd_grav_common_alloc_aquifer_cell(const rd::rd_grid_cache &grid_cache,
                                         const rd_file_type *init_file) {
+    const rd_kw_type *aquifer_kw = nullptr;
+    if (rd_file_has_kw(init_file, AQUIFER_KW)) {
+        aquifer_kw = rd_file_iget_named_kw(init_file, AQUIFER_KW, 0);
+        if (rd_kw_get_size(aquifer_kw) != grid_cache.size())
+            util_abort("%s: %s keyword has %d elements, but the grid has %d "
+                       "active cells\n",
+                       __func__, AQUIFER_KW, rd_kw_get_size(aquifer_kw),
+                       static_cast<int>(grid_cache.size()));
+    }
+
     bool *aquifer_cell =
         (bool *)util_calloc(grid_cache.size(), sizeof *aquifer_cell);
 
     for (int active_index = 0; active_index < grid_cache.size(); active_index++)
         aquifer_cell[active_index] = false;
 
-    if (rd_file_has_kw(init_file, AQUIFER_KW)) {
-        rd_kw_type *aquifer_kw =
-            rd_file_iget_named_kw(init_file, AQUIFER_KW, 0);
+    if (aquifer_kw) {
         const int *aquifer_data = rd_kw_get_int_ptr(aquifer_kw);
 
         for (int active_index = 0; active_index < grid_cache.size();
