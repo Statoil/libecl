@@ -2571,6 +2571,17 @@ static rd_grid_ptr rd_grid_alloc_EGRID__(rd_grid_type *main_grid,
     else {
         if (rd_file_get_num_named_kw(rd_file, ACTNUM_KW) > grid_nr) {
             actnum_kw = rd_file_iget_named_kw(rd_file, ACTNUM_KW, grid_nr);
+            const int nx = rd_kw_iget_int(gridhead_kw, GRIDHEAD_NX_INDEX);
+            const int ny = rd_kw_iget_int(gridhead_kw, GRIDHEAD_NY_INDEX);
+            const int nz = rd_kw_iget_int(gridhead_kw, GRIDHEAD_NZ_INDEX);
+            if (nx >= 0 && ny >= 0 && nz >= 0) {
+                const int64_t actnum_size = int64_t{nx} * ny * nz;
+                if (rd_kw_get_size(actnum_kw) != actnum_size)
+                    throw std::invalid_argument(fmt::format(
+                        "Invalid size of ACTNUM keyword = {}, expected nz "
+                        "* nx * ny = {}",
+                        rd_kw_get_size(actnum_kw), actnum_size));
+            }
             actnum_data = rd_kw_get_int_ptr(actnum_kw);
         }
     }
@@ -2626,6 +2637,11 @@ static rd_grid_ptr rd_grid_alloc_EGRID_all_grids(const char *grid_file,
                     rd_grid_type *host_grid;
                     rd_kw_type *hostnum_kw = rd_file_iget_named_kw(
                         rd_file.get(), HOSTNUM_KW, grid_nr - 1);
+                    if (rd_kw_get_size(hostnum_kw) != lgr->size)
+                        throw std::invalid_argument(fmt::format(
+                            "Invalid size of HOSTNUM keyword = {}, expected "
+                            "nx * ny * nz of the LGR = {}",
+                            rd_kw_get_size(hostnum_kw), lgr->size));
                     if (!lgr->parent_name)
                         host_grid = main_grid.get();
                     else

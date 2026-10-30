@@ -204,6 +204,7 @@ def _write_lgr_egrid_section(
     grid_nr: int,
     lgr_grid: Grid,
     host_global_one_based: int,
+    hostnum: Sequence[int] | None = None,
 ) -> None:
     write_char_kw(fortio, LGR_KW, [name])
     write_char_kw(fortio, LGR_PARENT_KW, [parent])
@@ -211,7 +212,9 @@ def _write_lgr_egrid_section(
     _write_grid_body(fortio, lgr_grid)
 
     lgr_size = lgr_grid.get_global_size()
-    write_int_kw(fortio, HOSTNUM_KW, [host_global_one_based] * lgr_size)
+    if hostnum is None:
+        hostnum = [host_global_one_based] * lgr_size
+    write_int_kw(fortio, HOSTNUM_KW, list(hostnum))
     write_empty_kw(fortio, ENDGRID_KW)
     write_empty_kw(fortio, ENDLGR_KW)
 
@@ -244,6 +247,7 @@ def write_egrid_with_single_lgr(
     nncg: Sequence[int] = (),
     nncl: Sequence[int] = (),
     lgr_nr: int = 1,
+    hostnum: Sequence[int] | None = None,
 ) -> None:
     main_grid = make_rectangular_grid(nx, ny, nz, 1.0, 1.0, 1.0)
     lgr_grid = make_rectangular_grid(
@@ -259,7 +263,9 @@ def write_egrid_with_single_lgr(
         _write_grid_body(f, main_grid)
         write_empty_kw(f, ENDGRID_KW)
 
-        _write_lgr_egrid_section(f, lgr_name, "", lgr_nr, lgr_grid, host_global + 1)
+        _write_lgr_egrid_section(
+            f, lgr_name, "", lgr_nr, lgr_grid, host_global + 1, hostnum
+        )
         _write_nnc_pair(f, lgr_nr, NNCG_KW, NNCL_KW, nncg, nncl)
 
 
@@ -369,6 +375,25 @@ def write_egrid_with_two_lgrs_and_amalgamated_nnc(
             write_int_kw(f, NNCHEADA_KW, nncheada)
             write_int_kw(f, NNA1_KW, list(nna1))
             write_int_kw(f, NNA2_KW, list(nna2))
+
+
+def write_egrid_with_actnum(
+    filename: Path,
+    nx: int,
+    ny: int,
+    nz: int,
+    actnum: Sequence[int],
+) -> None:
+    """Write an EGRID of size nx*ny*nz whose
+    ACTNUM has exactly the given values, regardless of the grid size."""
+    body_grid = make_rectangular_grid(nx, ny, nz, 1.0, 1.0, 1.0)
+    with openFortIO(str(filename), mode=FortIO.WRITE_MODE) as f:
+        _write_filehead(f)
+        _write_gridhead(f, nx, ny, nz, 0)
+        body_grid.export_coord().fwrite(f)
+        body_grid.export_zcorn().fwrite(f)
+        write_int_kw(f, ACTNUM_KW, list(actnum))
+        write_empty_kw(f, ENDGRID_KW)
 
 
 def write_egrid_with_coarse_groups(
