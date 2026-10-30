@@ -904,3 +904,13 @@ def test_that_first_day_of_a_writer_without_time_steps_raises_index_error():
 
     with pytest.raises(IndexError):
         _ = writer.first_day
+
+
+@pytest.mark.usefixtures("use_tmpdir")
+def test_that_first_day_is_the_time_of_the_first_step_in_days():
+    writer = Summary.writer("WRITER", datetime.datetime(2010, 1, 1), 5, 5, 5)
+    writer.add_variable("FOPT", unit="SM3")
+    writer.add_t_step(1, 3.0)
+    writer.add_t_step(2, 4.0)
+
+    assert writer.first_day == 3.0
