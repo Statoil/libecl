@@ -11,6 +11,7 @@
 #include <resdata/rd_grid.hpp>
 #include <resdata/rd_kw.hpp>
 #include <resdata/rd_kw_magic.hpp>
+#include <limits>
 #include <vector>
 
 #include "grid_fixtures.hpp"
@@ -104,6 +105,50 @@ TEST_CASE_METHOD(Tmpdir, "Load EGRID with non-consecutive coarse group numbers",
             REQUIRE(rd_grid_iget_coarse_group(grid.get(), 0) != nullptr);
             REQUIRE(rd_grid_iget_coarse_group(grid.get(), 1) == nullptr);
             REQUIRE(rd_grid_iget_coarse_group(grid.get(), 2) != nullptr);
+        }
+    }
+}
+
+TEST_CASE_METHOD(Tmpdir, "Load EGRID with extreme coarse group numbers",
+                 "[unittest]") {
+    const int nx = 2, ny = 2, nz = 2;
+    const size_t size = nx * ny * nz;
+
+    GIVEN("An EGRID file whose CORSNUM contains a very large group number") {
+        std::vector<int> corsnum(size, 0);
+        corsnum[0] = std::numeric_limits<int>::max();
+        corsnum[1] = std::numeric_limits<int>::max();
+
+        auto filename = dirname / "CORSNUM_HUGE.EGRID";
+        auto grid =
+            load_egrid_with_coarse_groups(filename, nx, ny, nz, corsnum.data());
+        REQUIRE(grid != nullptr);
+
+        THEN("only the used group is stored") {
+            REQUIRE(rd_grid_get_num_coarse_groups(grid.get()) ==
+                    std::numeric_limits<int>::max());
+            REQUIRE(rd_grid_iget_coarse_group(
+                        grid.get(), std::numeric_limits<int>::max() - 1) !=
+                    nullptr);
+            REQUIRE(rd_grid_iget_coarse_group(grid.get(), 0) == nullptr);
+            REQUIRE(rd_grid_iget_coarse_group(
+                        grid.get(), std::numeric_limits<int>::max()) ==
+                    nullptr);
+        }
+    }
+
+    GIVEN("An EGRID file whose CORSNUM contains negative group numbers") {
+        std::vector<int> corsnum(size, -4);
+
+        auto filename = dirname / "CORSNUM_NEGATIVE.EGRID";
+        auto grid =
+            load_egrid_with_coarse_groups(filename, nx, ny, nz, corsnum.data());
+        REQUIRE(grid != nullptr);
+
+        THEN("the cells are not part of any coarse group") {
+            REQUIRE(rd_grid_get_num_coarse_groups(grid.get()) == 0);
+            for (size_t i = 0; i < size; i++)
+                REQUIRE(!rd_grid_cell_in_coarse_group1(grid.get(), i));
         }
     }
 }
