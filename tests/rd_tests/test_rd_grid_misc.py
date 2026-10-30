@@ -12,10 +12,12 @@ from resdata.resfile import ResdataKW
 from resdata.util.util import DoubleVector
 
 from ._grid_fixtures import (
+    UNIT_CELL_CORNERS,
     load_egrid_with_single_lgr,
     make_rectangular_grid,
     write_egrid_with_actnum,
     write_egrid_with_single_lgr,
+    write_grid_file_with_cell_keywords,
 )
 
 
@@ -299,4 +301,22 @@ def test_that_egrid_with_wrongly_sized_hostnum_is_rejected(tmp_path, hostnum_siz
     )
 
     with pytest.raises(ValueError, match="Invalid size of HOSTNUM"):
+        Grid(str(filename))
+
+
+@pytest.mark.parametrize(
+    "coords, corners, keyword",
+    [
+        ([1, 1, 1, 1, 1], [0.0], "CORNERS"),
+        ([1, 1, 1, 1, 1], list(UNIT_CELL_CORNERS) + [0.0], "CORNERS"),
+        ([1, 1], list(UNIT_CELL_CORNERS), "COORDS"),
+    ],
+)
+def test_that_grid_file_with_wrongly_sized_cell_keywords_is_rejected(
+    tmp_path, coords, corners, keyword
+):
+    filename = tmp_path / "BAD_CELL.GRID"
+    write_grid_file_with_cell_keywords(filename, coords, corners)
+
+    with pytest.raises(ValueError, match=f"Invalid size of {keyword}"):
         Grid(str(filename))
