@@ -904,6 +904,14 @@ static bool rd_smspec_fread_header(rd_smspec_type *rd_smspec,
             rd_smspec->has_lgr = false;
 
         {
+            if (rd_kw_get_size(startdat) < 3) {
+                int startdat_size = rd_kw_get_size(startdat);
+                rd_file_close(header);
+                throw std::invalid_argument(fmt::format(
+                    "Invalid size of STARTDAT keyword = {}, expected at "
+                    "least 3",
+                    startdat_size));
+            }
             int *date = rd_kw_get_int_ptr(startdat);
             int year = date[STARTDAT_YEAR_INDEX];
             int month = date[STARTDAT_MONTH_INDEX];

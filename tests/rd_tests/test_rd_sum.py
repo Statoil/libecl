@@ -33,6 +33,8 @@ from tests import ResdataTest, equinor_test
 from tests.util import TestAreaContext
 from tests.util.mock import createSummary
 
+from ._grid_fixtures import write_char_kw, write_float_kw, write_int_kw
+
 
 def test_write_repr():
     """repr(Summary) used to segfault when there is only a startdate"""
@@ -1474,3 +1476,20 @@ def test_get_general_var_index_with_unknown_key_raises():
 
     with pytest.raises(IndexError, match="Invalid lookup summary object"):
         summary.get_general_var_index("NO_SUCH_KEY")
+
+
+@pytest.mark.parametrize("startdat", [[1], [1, 1]])
+def test_that_smspec_with_too_short_startdat_is_rejected(tmp_path, startdat):
+    with openFortIO(str(tmp_path / "CASE.SMSPEC"), mode=FortIO.WRITE_MODE) as f:
+        write_int_kw(f, "DIMENS", [1, 1, 1, 1, 0, -1])
+        write_char_kw(f, "KEYWORDS", ["TIME"])
+        write_char_kw(f, "WGNAMES", [":+:+:+:+"])
+        write_char_kw(f, "UNITS", ["DAYS"])
+        write_int_kw(f, "STARTDAT", startdat)
+    with openFortIO(str(tmp_path / "CASE.UNSMRY"), mode=FortIO.WRITE_MODE) as f:
+        write_int_kw(f, "SEQHDR", [0])
+        write_int_kw(f, "MINISTEP", [0])
+        write_float_kw(f, "PARAMS", [0.0])
+
+    with pytest.raises(ValueError, match="Invalid size of STARTDAT"):
+        Summary.load(str(tmp_path / "CASE.SMSPEC"), str(tmp_path / "CASE.UNSMRY"))
