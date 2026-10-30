@@ -257,6 +257,8 @@ time_t rd_sum_file_data::iget_sim_time(int time_index) const {
   Will return the length of the simulation in whatever units were used in input.
 */
 double rd_sum_file_data::get_sim_length() const {
+    if (this->index.size() == 0)
+        return 0.0;
     const auto &node = this->index.back();
     return node.sim_seconds / rd_smspec_get_time_seconds(this->rd_smspec);
 }
@@ -494,6 +496,9 @@ bool rd_sum_file_data::can_write() const {
 }
 
 double rd_sum_file_data::get_days_start() const {
+    if (this->index.size() == 0)
+        throw std::out_of_range(
+            "rd_sum_file_data::get_days_start(): index size is 0");
     const auto &node = this->index[0];
     return node.sim_seconds * 86400;
 }
