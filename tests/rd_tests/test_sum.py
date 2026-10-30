@@ -881,3 +881,26 @@ def test_that_end_time_is_sim_start_when_there_are_no_steps():
     assert summary.end_date == summary.start_date
     # Note that in this situation
     # sum.data_start will raise
+
+
+@pytest.mark.usefixtures("use_tmpdir")
+def test_that_numpy_vector_of_a_writer_without_time_steps_is_empty():
+    writer = Summary.writer("WRITER", datetime.datetime(2010, 1, 1), 5, 5, 5)
+    writer.add_variable("FOPT", unit="SM3")
+
+    assert len(writer.numpy_vector("FOPT")) == 0
+
+
+@pytest.mark.usefixtures("use_tmpdir")
+def test_that_sim_length_of_a_writer_without_time_steps_is_zero():
+    writer = Summary.writer("WRITER", datetime.datetime(2010, 1, 1), 5, 5, 5)
+
+    assert writer.sim_length == 0.0
+
+
+@pytest.mark.usefixtures("use_tmpdir")
+def test_that_first_day_of_a_writer_without_time_steps_raises_index_error():
+    writer = Summary.writer("WRITER", datetime.datetime(2010, 1, 1), 5, 5, 5)
+
+    with pytest.raises(IndexError):
+        _ = writer.first_day

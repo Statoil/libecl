@@ -940,6 +940,8 @@ static void rd_sum_data_init_double_vector__(const rd_sum_data_type *data,
                                              bool report_only) {
     int offset = 0;
     for (const auto &index_node : data->index) {
+        if (index_node.length == 0)
+            continue;
         const auto &data_file = data->data_files[index_node.data_index];
         const auto &params_map = index_node.params_map;
         int params_index = params_map[main_params_index];
