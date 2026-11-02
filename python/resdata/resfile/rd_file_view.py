@@ -1,7 +1,6 @@
 import warnings
 
 from cwrap import BaseCClass
-from six import string_types
 
 from resdata import ResdataPrototype
 
@@ -103,7 +102,7 @@ class ResdataFileView(BaseCClass):
         else:
             if isinstance(index, bytes):
                 index = index.decode("ascii")
-            if isinstance(index, string_types):
+            if isinstance(index, str):
                 if index in self:
                     kw_index = index
                     kw_list = []

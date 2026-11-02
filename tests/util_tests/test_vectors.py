@@ -2,7 +2,6 @@ import copy
 import datetime
 from unittest import TestCase
 
-import six
 from resdata.util.util import (
     BoolVector,
     CTime,
@@ -475,7 +474,7 @@ class UtilTest(TestCase):
         start = datetime.datetime(1980, 1, 1, 0, 0, 0)
         end = datetime.datetime(2020, 1, 1, 0, 0, 0)
         trange = TimeVector.createRegular(start, end, "2Y")
-        for y, t in zip(six.moves.xrange(1980, 2022, 2), trange):
+        for y, t in zip(range(1980, 2022, 2), trange):
             self.assertTrue(t == datetime.datetime(y, 1, 1, 0, 0, 0))
 
         trange = TimeVector.createRegular(start, datetime.date(2050, 1, 1), "1Y")
