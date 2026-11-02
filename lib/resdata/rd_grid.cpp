@@ -2168,7 +2168,7 @@ static rd_grid_ptr rd_grid_alloc_GRDECL_kw__(
     const rd_kw_type *coord_kw, const rd_kw_type *gridunit_kw, /* Can be NULL */
     const rd_kw_type *mapaxes_kw,                              /* Can be NULL */
     const rd_kw_type *corsnum_kw,                              /* Can be NULL */
-    const int *actnum) {                                       /* Can be NULL */
+    const rd_kw_type *actnum_kw) {                             /* Can be NULL */
     int gtype, nx, ny, nz, lgr_nr;
     ert_rd_unit_enum unit_system = RD_METRIC_UNITS;
     gtype = rd_kw_iget_int(gridhead_kw, GRIDHEAD_TYPE_INDEX);
@@ -2210,6 +2210,17 @@ static rd_grid_ptr rd_grid_alloc_GRDECL_kw__(
             fmt::format("Invalid size of ZCORN keyword = {}, expected 8 * "
                         "nx * ny * nz = {}",
                         rd_kw_get_size(zcorn_kw), zcorn_size));
+
+    const int *actnum = nullptr;
+    if (actnum_kw) {
+        const int64_t expected_actnum_size = int64_t{nx} * ny * nz;
+        if (rd_kw_get_size(actnum_kw) != expected_actnum_size)
+            throw std::invalid_argument(
+                fmt::format("Invalid size of ACTNUM keyword = {}, expected nz "
+                            "* nx * ny = {}",
+                            rd_kw_get_size(actnum_kw), expected_actnum_size));
+        actnum = rd_kw_get_int_ptr(actnum_kw);
+    }
 
     /*
     The code used to have this test:
@@ -2299,31 +2310,13 @@ rd_grid_alloc_GRDECL_kw(int nx, int ny, int nz, const rd_kw_type *zcorn_kw,
                         const rd_kw_type *actnum_kw,    /* Can be NULL */
                         const rd_kw_type *mapaxes_kw) { /* Can be NULL */
 
-    const int *actnum_data = NULL;
-    if (actnum_kw) {
-        const int64_t expected_actnum_size = int64_t{nx} * ny * nz;
-
-        if (expected_actnum_size > std::numeric_limits<int>::max())
-            throw std::invalid_argument(fmt::format(
-                "Grid dimensions too large: nx={}, ny={}, nz={}", nx, ny, nz));
-
-        const int actnum_size = static_cast<int>(expected_actnum_size);
-
-        if (rd_kw_get_size(actnum_kw) != actnum_size)
-            throw std::invalid_argument(
-                fmt::format("Invalid size of ACTNUM keyword = {}, expected nz "
-                            "* nx * ny = {}",
-                            rd_kw_get_size(actnum_kw), actnum_size));
-        actnum_data = rd_kw_get_int_ptr(actnum_kw);
-    }
-
     bool apply_mapaxes = true;
     auto gridhead_kw =
         rd_kw_ptr(rd_grid_alloc_gridhead_kw(nx, ny, nz, 0), &rd_kw_free);
     rd_kw_type *gridunit_kw = NULL;
     return rd_grid_alloc_GRDECL_kw__(
                NULL, FILEHEAD_SINGLE_POROSITY, apply_mapaxes, gridhead_kw.get(),
-               zcorn_kw, coord_kw, gridunit_kw, mapaxes_kw, NULL, actnum_data)
+               zcorn_kw, coord_kw, gridunit_kw, mapaxes_kw, NULL, actnum_kw)
         .release();
 }
 
@@ -2541,8 +2534,7 @@ static void rd_grid_init_nnc_amalgamated(rd_grid_type *main_grid,
 
 static rd_grid_ptr rd_grid_alloc_EGRID__(rd_grid_type *main_grid,
                                          const rd_file_type *rd_file,
-                                         int grid_nr, bool apply_mapaxes,
-                                         const int *ext_actnum) {
+                                         int grid_nr, bool apply_mapaxes) {
     rd_kw_type *gridhead_kw =
         rd_file_iget_named_kw(rd_file, GRIDHEAD_KW, grid_nr);
     rd_kw_type *zcorn_kw = rd_file_iget_named_kw(rd_file, ZCORN_KW, grid_nr);
@@ -2563,30 +2555,8 @@ static rd_grid_ptr rd_grid_alloc_EGRID__(rd_grid_type *main_grid,
         eclipse_version = main_grid->eclipse_version;
     }
 
-    /*
-    If ext_actnum is present that is used as ACTNUM, and the file is not checked
-    for an ACTNUM keyword at all.
-  */
-    const int *actnum_data = NULL;
-    if (ext_actnum)
-        actnum_data = ext_actnum;
-    else {
-        if (rd_file_get_num_named_kw(rd_file, ACTNUM_KW) > grid_nr) {
-            actnum_kw = rd_file_iget_named_kw(rd_file, ACTNUM_KW, grid_nr);
-            const int nx = rd_kw_iget_int(gridhead_kw, GRIDHEAD_NX_INDEX);
-            const int ny = rd_kw_iget_int(gridhead_kw, GRIDHEAD_NY_INDEX);
-            const int nz = rd_kw_iget_int(gridhead_kw, GRIDHEAD_NZ_INDEX);
-            if (nx >= 0 && ny >= 0 && nz >= 0) {
-                const int64_t actnum_size = int64_t{nx} * ny * nz;
-                if (rd_kw_get_size(actnum_kw) != actnum_size)
-                    throw std::invalid_argument(fmt::format(
-                        "Invalid size of ACTNUM keyword = {}, expected nz "
-                        "* nx * ny = {}",
-                        rd_kw_get_size(actnum_kw), actnum_size));
-            }
-            actnum_data = rd_kw_get_int_ptr(actnum_kw);
-        }
-    }
+    if (rd_file_get_num_named_kw(rd_file, ACTNUM_KW) > grid_nr)
+        actnum_kw = rd_file_iget_named_kw(rd_file, ACTNUM_KW, grid_nr);
 
     if (grid_nr == 0) {
         /* MAPAXES and COARSENING only apply to the global grid. */
@@ -2603,7 +2573,7 @@ static rd_grid_ptr rd_grid_alloc_EGRID__(rd_grid_type *main_grid,
     {
         auto rd_grid = rd_grid_alloc_GRDECL_kw__(
             main_grid, dualp_flag, apply_mapaxes, gridhead_kw, zcorn_kw,
-            coord_kw, gridunit_kw, mapaxes_kw, corsnum_kw, actnum_data);
+            coord_kw, gridunit_kw, mapaxes_kw, corsnum_kw, actnum_kw);
 
         if (RD_GRID_MAINGRID_LGR_NR != grid_nr)
             rd_grid_set_lgr_name_EGRID(rd_grid.get(), rd_file, grid_nr);
@@ -2613,8 +2583,7 @@ static rd_grid_ptr rd_grid_alloc_EGRID__(rd_grid_type *main_grid,
 }
 
 static rd_grid_ptr rd_grid_alloc_EGRID_all_grids(const char *grid_file,
-                                                 bool apply_mapaxes,
-                                                 const int *ext_actnum) {
+                                                 bool apply_mapaxes) {
     rd_file_enum file_type;
     file_type = rd_get_file_type(grid_file, NULL, NULL);
     if (file_type != RD_EGRID_FILE)
@@ -2624,15 +2593,15 @@ static rd_grid_ptr rd_grid_alloc_EGRID_all_grids(const char *grid_file,
         auto rd_file = rd_file_ptr(rd_file_open(grid_file, 0), &rd_file_close);
         if (rd_file) {
             int num_grid = rd_file_get_num_named_kw(rd_file.get(), GRIDHEAD_KW);
-            auto main_grid = rd_grid_alloc_EGRID__(nullptr, rd_file.get(), 0,
-                                                   apply_mapaxes, ext_actnum);
+            auto main_grid =
+                rd_grid_alloc_EGRID__(nullptr, rd_file.get(), 0, apply_mapaxes);
             int grid_nr;
 
             for (grid_nr = 1; grid_nr < num_grid; grid_nr++) {
                 // The apply_mapaxes argument is ignored for LGR -
                 //   it inherits from parent anyway.
                 auto lgr_grid = rd_grid_alloc_EGRID__(
-                    main_grid.get(), rd_file.get(), grid_nr, false, NULL);
+                    main_grid.get(), rd_file.get(), grid_nr, false);
                 auto *lgr =
                     rd_grid_add_lgr(main_grid.get(), std::move(lgr_grid));
                 {
@@ -2666,7 +2635,7 @@ static rd_grid_ptr rd_grid_alloc_EGRID_all_grids(const char *grid_file,
 
 static rd_grid_ptr rd_grid_alloc_EGRID(const char *grid_file,
                                        bool apply_mapaxes) {
-    return rd_grid_alloc_EGRID_all_grids(grid_file, apply_mapaxes, NULL);
+    return rd_grid_alloc_EGRID_all_grids(grid_file, apply_mapaxes);
 }
 
 static rd_grid_ptr rd_grid_alloc_GRID_data__(
