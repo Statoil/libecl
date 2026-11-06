@@ -34,7 +34,7 @@ addopts = "--strict-markers"
 testpaths = ["tests"]
 [tool.cibuildwheel]
 build-frontend = "build[uv]"
-build = "cp311-* cp312-* cp313-* cp314-*"
+build = "cp311-* cp312-* cp313-* cp314-* cp315-*"
 skip = "*-musllinux_* *-win32"
 
 [tool.cibuildwheel.linux]
